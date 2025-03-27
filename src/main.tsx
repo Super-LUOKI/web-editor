@@ -4,6 +4,6 @@ import './index.css'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <div>Hello LuoKing</div>
+    <div className='text-body-sm bg-red-700 te'>Hello LuoKing</div>
   </StrictMode>,
 )
