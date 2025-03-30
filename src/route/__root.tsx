@@ -3,9 +3,9 @@ import {
 } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 
+import { NodeEnv } from "../../config/env.ts";
 import { SideBarLayout } from "@/common/component/side-bar-layout.tsx";
 
-import { NodeEnv } from "../../config/env.ts";
 
 export const Route = createRootRoute({
   component: () => (
