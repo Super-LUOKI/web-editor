@@ -17,23 +17,11 @@ export default tseslint.config({ ignores: ['dist'] }, {
     'react-refresh': reactRefresh,
     import: importPlugin,
   },
-  settings: {
-    'import/resolver': {
-      alias: {
-        map: [['@/', './src/'],],
-        extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
-      },
-      typescript: { alwaysTryTypes: true, },
-    },
-  },
   rules: {
-    ...reactHooks.configs.recommended.rules,
-    'object-curly-newline': [
-      'error', {
-        multiline: true,
-        minProperties: 2
-      }
-    ],
+    'object-curly-newline': ['error', {
+      multiline: true,
+      minProperties: 2
+    }],
     indent: ['error', 2, { SwitchCase: 1 }],
     'object-curly-spacing': ['error', 'always'],
     'import/order': ['error', {
