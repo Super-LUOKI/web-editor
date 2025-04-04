@@ -1,3 +1,5 @@
+import * as path from "node:path";
+
 import tailwindcss from "@tailwindcss/vite";
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
 import react from '@vitejs/plugin-react'
@@ -17,5 +19,5 @@ export default defineConfig({
   ],
   server: { port: 5100, },
   define: { 'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV) },
-  resolve: { alias: { '@/': './src/', } }
+  resolve: { alias: { '@': path.resolve(__dirname, './src'), } }
 })
