@@ -11,11 +11,18 @@
 // Import Routes
 
 import { Route as rootRoute } from './../route/__root'
+import { Route as MainRouteImport } from './../route/_main/route'
 import { Route as IndexImport } from './../route/index'
-import { Route as ProjectsIndexImport } from './../route/projects/index'
-import { Route as HomeIndexImport } from './../route/home/index'
+import { Route as EditorIndexImport } from './../route/editor/index'
+import { Route as MainProjectImport } from './../route/_main/project'
+import { Route as MainHomeImport } from './../route/_main/home'
 
 // Create/Update Routes
+
+const MainRouteRoute = MainRouteImport.update({
+  id: '/_main',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
@@ -23,16 +30,22 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const ProjectsIndexRoute = ProjectsIndexImport.update({
-  id: '/projects/',
-  path: '/projects/',
+const EditorIndexRoute = EditorIndexImport.update({
+  id: '/editor/',
+  path: '/editor/',
   getParentRoute: () => rootRoute,
 } as any)
 
-const HomeIndexRoute = HomeIndexImport.update({
-  id: '/home/',
-  path: '/home/',
-  getParentRoute: () => rootRoute,
+const MainProjectRoute = MainProjectImport.update({
+  id: '/project',
+  path: '/project',
+  getParentRoute: () => MainRouteRoute,
+} as any)
+
+const MainHomeRoute = MainHomeImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => MainRouteRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -46,18 +59,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/home/': {
-      id: '/home/'
-      path: '/home'
-      fullPath: '/home'
-      preLoaderRoute: typeof HomeIndexImport
+    '/_main': {
+      id: '/_main'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof MainRouteImport
       parentRoute: typeof rootRoute
     }
-    '/projects/': {
-      id: '/projects/'
-      path: '/projects'
-      fullPath: '/projects'
-      preLoaderRoute: typeof ProjectsIndexImport
+    '/_main/home': {
+      id: '/_main/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof MainHomeImport
+      parentRoute: typeof MainRouteImport
+    }
+    '/_main/project': {
+      id: '/_main/project'
+      path: '/project'
+      fullPath: '/project'
+      preLoaderRoute: typeof MainProjectImport
+      parentRoute: typeof MainRouteImport
+    }
+    '/editor/': {
+      id: '/editor/'
+      path: '/editor'
+      fullPath: '/editor'
+      preLoaderRoute: typeof EditorIndexImport
       parentRoute: typeof rootRoute
     }
   }
@@ -65,44 +92,70 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
+interface MainRouteRouteChildren {
+  MainHomeRoute: typeof MainHomeRoute
+  MainProjectRoute: typeof MainProjectRoute
+}
+
+const MainRouteRouteChildren: MainRouteRouteChildren = {
+  MainHomeRoute: MainHomeRoute,
+  MainProjectRoute: MainProjectRoute,
+}
+
+const MainRouteRouteWithChildren = MainRouteRoute._addFileChildren(
+  MainRouteRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/home': typeof HomeIndexRoute
-  '/projects': typeof ProjectsIndexRoute
+  '': typeof MainRouteRouteWithChildren
+  '/home': typeof MainHomeRoute
+  '/project': typeof MainProjectRoute
+  '/editor': typeof EditorIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/home': typeof HomeIndexRoute
-  '/projects': typeof ProjectsIndexRoute
+  '': typeof MainRouteRouteWithChildren
+  '/home': typeof MainHomeRoute
+  '/project': typeof MainProjectRoute
+  '/editor': typeof EditorIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/home/': typeof HomeIndexRoute
-  '/projects/': typeof ProjectsIndexRoute
+  '/_main': typeof MainRouteRouteWithChildren
+  '/_main/home': typeof MainHomeRoute
+  '/_main/project': typeof MainProjectRoute
+  '/editor/': typeof EditorIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/home' | '/projects'
+  fullPaths: '/' | '' | '/home' | '/project' | '/editor'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/home' | '/projects'
-  id: '__root__' | '/' | '/home/' | '/projects/'
+  to: '/' | '' | '/home' | '/project' | '/editor'
+  id:
+    | '__root__'
+    | '/'
+    | '/_main'
+    | '/_main/home'
+    | '/_main/project'
+    | '/editor/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  HomeIndexRoute: typeof HomeIndexRoute
-  ProjectsIndexRoute: typeof ProjectsIndexRoute
+  MainRouteRoute: typeof MainRouteRouteWithChildren
+  EditorIndexRoute: typeof EditorIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  HomeIndexRoute: HomeIndexRoute,
-  ProjectsIndexRoute: ProjectsIndexRoute,
+  MainRouteRoute: MainRouteRouteWithChildren,
+  EditorIndexRoute: EditorIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -116,18 +169,30 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/home/",
-        "/projects/"
+        "/_main",
+        "/editor/"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
-    "/home/": {
-      "filePath": "home/index.tsx"
+    "/_main": {
+      "filePath": "_main/route.tsx",
+      "children": [
+        "/_main/home",
+        "/_main/project"
+      ]
     },
-    "/projects/": {
-      "filePath": "projects/index.tsx"
+    "/_main/home": {
+      "filePath": "_main/home.tsx",
+      "parent": "/_main"
+    },
+    "/_main/project": {
+      "filePath": "_main/project.tsx",
+      "parent": "/_main"
+    },
+    "/editor/": {
+      "filePath": "editor/index.tsx"
     }
   }
 }
