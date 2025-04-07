@@ -36,4 +36,8 @@ export default tseslint.config({ ignores: ['dist'] }, {
       numbers: false
     }],
   },
-},)
+}, {
+  extends: [js.configs.recommended, ...tseslint.configs.recommended],
+  files: ['src/lib/remotion/**/*.{js,jsx,ts,tsx}'],
+  rules: { 'no-restricted-imports': ['error', { patterns: ['@/*'] }] }
+})

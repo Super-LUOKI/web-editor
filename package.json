@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "prepare": "husky"
+    "prepare": "husky",
+    "remotion-studio": "remotion studio ./src/lib/remotion/index.ts --no-open"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint --fix"
@@ -45,6 +46,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
+    "@remotion/eslint-plugin": "^4.0.286",
     "@tanstack/react-router-devtools": "^1.114.29",
     "@tanstack/router-plugin": "^1.114.30",
     "@types/react": "^19.0.10",
