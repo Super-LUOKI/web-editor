@@ -7,7 +7,7 @@ import { PropsWithChildren } from "react";
 import {
   Avatar, AvatarFallback, AvatarImage
 } from "@/component/ui/avatar.tsx";
-import { cn } from "@/lib/util.ts";
+import { cn } from "@/lib/shadcn/util.ts";
 
 type SidebarItem = {
     title: string;

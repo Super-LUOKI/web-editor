@@ -14,7 +14,7 @@
     "components": "@/component",
     "utils": "@/lib/util",
     "ui": "@/component/ui",
-    "lib": "@/lib",
+    "lib": "@/lib/shadcn",
     "hooks": "@/hook"
   },
   "iconLibrary": "lucide"
