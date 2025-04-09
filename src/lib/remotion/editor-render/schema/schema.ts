@@ -27,6 +27,7 @@ export const TimelineSchema = z.object({
 
 export const MetaSchema = z.object({
   watermark: z.string().optional(),
+  thumbnail: z.boolean().optional(),
   thumbnailFrame: z.number().optional(),
   width: z.number().optional(),
   height: z.number().optional(),
