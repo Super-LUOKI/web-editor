@@ -1,8 +1,12 @@
 import { z } from "zod";
 
-import { AssetAbstractSchema } from "./common.ts";
 
-export const ImageAssetSchema = AssetAbstractSchema.extend({
+export const AbstractAssetSchema = z.object({
+  id: z.string(), type: z.string()
+})
+
+
+export const ImageAssetSchema = AbstractAssetSchema.extend({
   type: z.literal('image'),
   src: z.string(),
   width: z.number(),
@@ -11,7 +15,8 @@ export const ImageAssetSchema = AssetAbstractSchema.extend({
     src: z.string(),
     width: z.number(),
     height: z.number(),
-  }))
+  })).optional()
 })
+
 
 export type ImageAsset = z.infer<typeof ImageAssetSchema>;

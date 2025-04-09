@@ -1,9 +1,12 @@
 import { z } from "zod";
 
 import { AnimationDataSchema } from "./animation.ts";
-import {
-  AbstractElementSchema, RectSchema
-} from "./common.ts";
+import { RectSchema } from "./common.ts";
+
+export const AbstractElementSchema = z.object({
+  id: z.string(), type: z.string(), assetId: z.string().optional()
+})
+
 
 export const BaseElementSchema = AbstractElementSchema.extend({
   parent: z.string().optional(),
@@ -17,12 +20,14 @@ export const BaseElementSchema = AbstractElementSchema.extend({
 
 export const DisplayElement = BaseElementSchema.extend({
   /**
-     * display size width, undefined if width is auto
-     */
+   * display size width
+   * do not modify it, it will be be automatically generated.
+   */
   width: z.number().optional(),
   /**
-     * display size width, undefined if height is auto
-     */
+   * display size width
+   * do not modify it, it will be be automatically generated.
+   */
   height: z.number().optional(),
   /** right is positive */
   x: z.number(),
