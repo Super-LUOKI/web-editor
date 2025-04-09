@@ -8,6 +8,7 @@ export function RemotionRoot(){
   return (
     <>
       {
+        // todo calculateMetadata: to override the default props
         mockDrafts.map((mockDraft, index) => (
           <Composition
             id={'render' + index}
