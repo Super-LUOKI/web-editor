@@ -1,6 +1,6 @@
 import { EditorDraftData } from "../editor-render/schema/schema";
 
-export const ImageOnlyDraft: EditorDraftData = {
+export const ImageOnlyDraft1: EditorDraftData = {
   timeline: {
     assets: {
       test_image_1: {
