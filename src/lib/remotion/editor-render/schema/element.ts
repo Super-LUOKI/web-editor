@@ -61,5 +61,16 @@ export const ImageElementSchema = DisplayElement.extend({
   assetId: z.string(),
 })
 
+export const AudioElementSchema = BaseElementSchema.extend({
+  type: z.literal('audio'),
+  assetId: z.string(),
+  playbackRate: z.number().optional(),
+  startFrom: z.number().optional(),
+  endAt: z.number().optional(),
+  loop: z.boolean().optional(),
+})
+
+export type AbstractElement = z.infer<typeof AbstractElementSchema>;
 export type DisplayElement = z.infer<typeof DisplayElement>;
 export type ImageElement = z.infer<typeof ImageElementSchema>;
+export type AudioElement = z.infer<typeof AudioElementSchema>;

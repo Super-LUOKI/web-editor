@@ -1,24 +1,17 @@
-import { ImageAsset } from "./asset.ts";
-import { ImageElement } from "./element.ts";
+import {
+  AudioAsset, ImageAsset
+} from "./asset.ts";
+import {
+  AudioElement, ImageElement
+} from "./element.ts";
 
-type TestExtraAsset = {
-    type: 'extra';
-    asset: string;
-}
 
-type TestExtraElement = {
-    type: 'extra';
-    extra: string;
-}
+export type AllAsset = ImageAsset | AudioAsset
 
-type TestOtherElement = {
-    type: 'other';
-    other: string;
-}
+export type AllElement = ImageElement | AudioElement
 
-export type AllAsset = ImageAsset | TestExtraAsset
-
-export type AllElement = ImageElement | TestExtraElement | TestOtherElement
+export type AllAssetType = AllAsset['type']
+export type AllElementType = AllElement['type']
 
 // element type must be unique: element -> asset = 1:n
 type ElementAssetTypePair =
@@ -26,10 +19,10 @@ type ElementAssetTypePair =
     { element: 'extra'; asset: 'extra' } |
     { element: 'other'; asset: 'extra' }
 
-export type ElementOfType<T extends AllElement['type']> = Extract<AllElement, { type: T }>
+export type ElementOfType<T extends AllElementType> = Extract<AllElement, { type: T }>
 
-export type AssetOfType<T extends AllAsset['type']> = Extract<AllAsset, { type: T }>
+export type AssetOfType<T extends AllAssetType> = Extract<AllAsset, { type: T }>
 
-export type AssetTypeOfElementType<T extends AllElement['type']> = Extract<ElementAssetTypePair, { element: T }>['asset']
+export type AssetTypeOfElementType<T extends AllElementType> = Extract<ElementAssetTypePair, { element: T }>['asset']
 
-export type AssetOfElementType<T extends AllElement['type']> = AssetOfType<AssetTypeOfElementType<T>>
+export type AssetOfElementType<T extends AllElementType> = AssetOfType<AssetTypeOfElementType<T>>

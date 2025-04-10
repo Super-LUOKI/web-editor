@@ -18,5 +18,12 @@ export const ImageAssetSchema = AbstractAssetSchema.extend({
   })).optional()
 })
 
+export const AudioAssetSchema = AbstractAssetSchema.extend({
+  type: z.literal('audio'),
+  src: z.string(),
+  duration: z.number(),
+})
+
 
 export type ImageAsset = z.infer<typeof ImageAssetSchema>;
+export type AudioAsset = z.infer<typeof AudioAssetSchema>;
