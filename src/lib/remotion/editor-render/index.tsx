@@ -1,11 +1,12 @@
 
 import { AbsoluteFill } from "remotion";
 
+import { DisplayElement } from "./component/display-element.tsx";
 import { useElements } from "./hook/use-element.ts";
-import { EditorDraftData } from "./schema/schema.ts";
+import { RenderDraftData } from "./schema/schema.ts";
 
 type RenderProps = {
-    draft: EditorDraftData,
+    draft: RenderDraftData,
 }
 
 export function Renderer(props: RenderProps) {
@@ -14,12 +15,13 @@ export function Renderer(props: RenderProps) {
     audioElements, displayElements
   } = useElements(draft)
 
+
   return <AbsoluteFill>
     {displayElements.map(element => (
-      <div key={element.id}>1</div>
+      <DisplayElement key={element.id} element={element} asset={draft.timeline.assets[element.assetId]}/>
     ))}
     {audioElements.map(element => (
-      <div key={element.id}>2</div>
+      <div key={element.id}>3</div>
     ))}
              
   </AbsoluteFill>

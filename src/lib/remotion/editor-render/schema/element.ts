@@ -3,12 +3,10 @@ import { z } from "zod";
 import { AnimationDataSchema } from "./animation.ts";
 import { RectSchema } from "./common.ts";
 
-export const AbstractElementSchema = z.object({
-  id: z.string(), type: z.string(), assetId: z.string().optional()
-})
 
-
-export const BaseElementSchema = AbstractElementSchema.extend({
+export const BaseElementSchema = z.object({
+  id: z.string(),
+  assetId: z.string().optional(),
   parent: z.string().optional(),
   children: z.array(z.string()).optional(),
   start: z.number(),
@@ -70,7 +68,14 @@ export const AudioElementSchema = BaseElementSchema.extend({
   loop: z.boolean().optional(),
 })
 
-export type AbstractElement = z.infer<typeof AbstractElementSchema>;
+export const AllElement = z.discriminatedUnion('type', [
+  ImageElementSchema,
+  AudioElementSchema,
+])
+
+
 export type DisplayElement = z.infer<typeof DisplayElement>;
+
 export type ImageElement = z.infer<typeof ImageElementSchema>;
 export type AudioElement = z.infer<typeof AudioElementSchema>;
+export type AllElement = z.infer<typeof AllElement>;

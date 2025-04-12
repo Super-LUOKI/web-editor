@@ -1,0 +1,57 @@
+import { AllElement } from "../schema/element.ts";
+import { RenderDraftData } from "../schema/schema.ts";
+import { EditorTrack } from "../schema/track.ts";
+import {
+  AllAssetType,
+  AllAssetTypeAllowString,
+  AllElementType,
+  AllElementTypeAllowString,
+  AssetOfType,
+  ElementOfType
+} from "../schema/util.ts";
+
+export function shallowWalkTracksElement(
+  draft: RenderDraftData,
+  tracks: EditorTrack[],
+  callback: (element: AllElement, track: EditorTrack) => void
+) {
+  const { timeline } = draft;
+  for (const track of tracks) {
+    const { clips } = track
+    for (const clip of clips) {
+      const { elementId } = clip
+      const element = timeline.elements[elementId];
+      if (!element) continue;
+      callback(element, track);
+    }
+  }
+}
+
+export function calculateDraftDuration(draft: RenderDraftData) {
+  let duration = 0;
+  shallowWalkTracksElement(draft, draft.timeline.tracks, (element)=>{
+    duration = Math.max(duration, element.start + element.length);
+  })
+  return duration
+}
+
+export function isTargetElement<T extends AllElementType>(
+  element: {type: AllElementTypeAllowString},
+  type: T
+): element is ElementOfType<T> {
+  return element.type === type;
+}
+
+export function isTargetAsset<T extends AllAssetType>(asset: {type: AllAssetTypeAllowString}, type: T): asset is AssetOfType<T> {
+  return asset.type === type;
+}
+
+export function getElements(draft: RenderDraftData, need: (element: AllElement) => boolean) {
+  const elements: AllElement[] = [];
+  shallowWalkTracksElement(draft, draft.timeline.tracks, (element) => {
+    if (need(element)) {
+      elements.push(element);
+    }
+  })
+  return elements;
+}

@@ -1,14 +1,14 @@
-import { EditorDraftData } from "../editor-render/schema/schema";
+import { RenderDraftData } from "../editor-render/schema/schema";
 
-export const ImageOnlyDraft1: EditorDraftData = {
+export const ImageOnlyDraft1: RenderDraftData = {
   timeline: {
     assets: {
       test_image_1: {
         id: 'test_image_1',
         type: 'image',
-        src: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.tp88.net%2Farticle%2F126344-67-0.html&psig=AOvVaw3pwqzEKDSzanK2itddC0ZB&ust=1744300399668000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCPjFhMiny4wDFQAAAAAdAAAAABAE',
-        width: 1242,
-        height: 1242
+        src: 'https://haowallpaper.com/link/common/file/previewFileImg/16449373166816640',
+        width: 1100,
+        height: 826
       },
     },
     elements: {
@@ -18,8 +18,14 @@ export const ImageOnlyDraft1: EditorDraftData = {
         assetId: 'test_image_1',
         start: 0,
         length: 2,
-        width: 1242,
-        height: 1242,
+        width: 600,
+        height: 200,
+        crop: {
+          x: 400,
+          y: 400,
+          width: 600,
+          height: 200,
+        },
         x: 0,
         y: 0,
         scaleX: 1,
@@ -29,13 +35,13 @@ export const ImageOnlyDraft1: EditorDraftData = {
       },
       test_image_2: {
         type: 'image',
-        id: 'test_image_1',
+        id: 'test_image_2',
         assetId: 'test_image_1',
-        start: 3,
-        length: 5,
-        width: 1242,
-        height: 1242,
-        x: 0,
+        start: 2,
+        length: 2,
+        width: 1100,
+        height: 826,
+        x: 50,
         y: 0,
         scaleX: 1,
         scaleY: 1,
@@ -44,14 +50,14 @@ export const ImageOnlyDraft1: EditorDraftData = {
       },
       test_image_3: {
         type: 'image',
-        id: 'test_image_1',
+        id: 'test_image_3',
         assetId: 'test_image_1',
-        start: 7,
-        length: 9,
-        width: 1242,
-        height: 1242,
-        x: 0,
-        y: 0,
+        start: 4,
+        length: 2,
+        width: 1100,
+        height: 826,
+        x: 600,
+        y: 600,
         scaleX: 1,
         scaleY: 1,
         rotate: 0,
@@ -70,4 +76,9 @@ export const ImageOnlyDraft1: EditorDraftData = {
       },
     ]
   },
+  meta: {
+    width: 1920,
+    height: 1080,
+    fps: 30,
+  }
 }

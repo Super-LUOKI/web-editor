@@ -1,28 +1,31 @@
-import {
-  AudioAsset, ImageAsset
-} from "./asset.ts";
-import {
-  AudioElement, ImageElement
-} from "./element.ts";
+import { AllAsset, } from "./asset.ts";
+import { AllElement, } from "./element.ts";
 
-
-export type AllAsset = ImageAsset | AudioAsset
-
-export type AllElement = ImageElement | AudioElement
 
 export type AllAssetType = AllAsset['type']
 export type AllElementType = AllElement['type']
 
 // element type must be unique: element -> asset = 1:n
 type ElementAssetTypePair =
-    { element: 'image'; asset: 'image' } |
-    { element: 'extra'; asset: 'extra' } |
-    { element: 'other'; asset: 'extra' }
+    { element: 'image'; asset: 'image' } 
+
+export const elementAssetPair:Record<AllElementType, string | null> = {
+  image: 'image',
+  audio: 'audio'
+}
 
 export type ElementOfType<T extends AllElementType> = Extract<AllElement, { type: T }>
 
 export type AssetOfType<T extends AllAssetType> = Extract<AllAsset, { type: T }>
 
+export type CorrespondElementAssetPair<E extends AllElementType> = {
+  element: ElementOfType<E>,
+  asset: AssetOfElementType<E>
+}
+
 export type AssetTypeOfElementType<T extends AllElementType> = Extract<ElementAssetTypePair, { element: T }>['asset']
 
 export type AssetOfElementType<T extends AllElementType> = AssetOfType<AssetTypeOfElementType<T>>
+
+export type AllElementTypeAllowString = AllElementType | string
+export type AllAssetTypeAllowString = AllAssetType | string

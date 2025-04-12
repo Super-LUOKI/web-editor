@@ -29,17 +29,17 @@ export const MetaSchema = z.object({
   watermark: z.string().optional(),
   thumbnail: z.boolean().optional(),
   thumbnailFrame: z.number().optional(),
-  width: z.number().optional(),
-  height: z.number().optional(),
-  fps: z.number().optional(),
+  width: z.number(),
+  height: z.number(),
+  fps: z.number(),
 })
 
 export const EditorDraftDataSchema = z.object({
   name: z.string().optional(),
   timeline: TimelineSchema,
-  meta: MetaSchema.optional(),
+  meta: MetaSchema,
 });
 
 export type EditorAsset = z.infer<typeof AssetSchema>;
 export type EditorElement = z.infer<typeof ElementSchema>;
-export type EditorDraftData = z.infer<typeof EditorDraftDataSchema>;
+export type RenderDraftData = z.infer<typeof EditorDraftDataSchema>;

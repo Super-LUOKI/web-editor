@@ -1,0 +1,32 @@
+import {
+  Img, useVideoConfig 
+} from "remotion";
+
+import { RenderSequence } from "./render-sequence.tsx";
+import { VisualContainer } from "./visual-container.tsx";
+import { CorrespondElementAssetPair } from "../schema/util.ts";
+import { calcCropStyle } from "../utils/style.ts";
+
+type ImageProps = CorrespondElementAssetPair<'image'>
+
+export function Image(props: ImageProps){
+  const {
+    element, asset
+  } = props
+
+  const { fps } = useVideoConfig()
+  const cropStyle = calcCropStyle(element, asset)
+
+  return <RenderSequence element={element} premountFor={1 * fps}>
+    <VisualContainer element={element}>
+      <div style={{
+        width: '100%', height: '100%', overflow: 'hidden', position: 'relative' 
+      }}>
+        <Img src={asset.src} style={{
+          position: 'relative',
+          ...cropStyle
+        }} />
+      </div>
+    </VisualContainer>
+  </RenderSequence>
+}

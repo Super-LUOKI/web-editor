@@ -1,22 +1,23 @@
 import { useMemo } from "react";
 
 import {
-  AudioElement, DisplayElement
+  AllElement,
+  AudioElement,
 } from "../schema/element.ts";
-import { EditorDraftData } from "../schema/schema.ts";
+import { RenderDraftData } from "../schema/schema.ts";
 import {
-  isTargetType, shallowWalkTracksElement
-} from "../utils.ts";
+  isTargetElement, shallowWalkTracksElement
+} from "../utils/draft.ts";
 
-export function useElements(draft: EditorDraftData,){
+export function useElements(draft: RenderDraftData,){
   return useMemo(() => {
-    const displayElements:DisplayElement[] = [];
+    const displayElements:AllElement[] = [];
     const audioElements:AudioElement[] = [];
     shallowWalkTracksElement(draft, draft.timeline.tracks, element => {
-      if(isTargetType(element, 'audio')) {
+      if(isTargetElement(element, 'audio')) {
         audioElements.push(element);
       }else{
-        displayElements.push(element as DisplayElement);
+        displayElements.push(element);
       }
     })
     return {
