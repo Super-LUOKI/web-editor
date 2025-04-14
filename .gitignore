@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 
 *.gen.ts
+
+# Remotion video out
+out
