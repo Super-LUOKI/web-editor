@@ -1,14 +1,34 @@
 import {
-  CSSProperties, PropsWithChildren
+  CSSProperties, PropsWithChildren, useMemo
 } from "react";
+import {
+  useCurrentFrame, useVideoConfig
+} from "remotion";
 
+import { AnimationFactory } from "../animation/animation-factory.ts";
 import { DisplayElement } from "../schema/element.ts";
 
 type VisualContainerProps = PropsWithChildren<{
     element: DisplayElement
 }>
 export function VisualContainer(props: VisualContainerProps){
+  const { fps } = useVideoConfig()
+  const currentFrame = useCurrentFrame()
   const { element } = props
+    
+  const animatoin = useMemo(()=>AnimationFactory.createAnimation(element), [element])
+
+  const animAttribute = useMemo(()=>{
+    return animatoin?.getAnimationProperty(currentFrame / fps)
+  }, [animatoin, currentFrame, fps])
+    
+  const elementX = typeof animAttribute?.x !== 'undefined' ? animAttribute.x : element.x;
+  const elementY = typeof animAttribute?.y !== 'undefined' ? animAttribute.y :  element.y;
+  const elementRotate = typeof animAttribute?.rotate !== 'undefined' ? animAttribute.rotate : element.rotate;
+  const elementScaleX = typeof animAttribute?.scaleX !== 'undefined' ? animAttribute.scaleX : element.scaleX;
+  const elementScaleY = typeof animAttribute?.scaleY !== 'undefined' ? animAttribute.scaleY : element.scaleY;
+  const elementOpacity = typeof animAttribute?.opacity !== 'undefined' ? animAttribute.opacity : element.opacity;
+
   return <div
     style={{
       width: element.width || 'max-content',
@@ -19,11 +39,11 @@ export function VisualContainer(props: VisualContainerProps){
       transformOrigin: 'center',
       transform: [
         `translate(-50%,-50%)`,
-        `translate(${element.x}px,${element.y}px)`,
-        `rotate(${element.rotate}deg)`,
-        `scale(${element.scaleX},${element.scaleY})`,
+        `translate(${elementX}px,${elementY}px)`,
+        `rotate(${elementRotate}deg)`,
+        `scale(${elementScaleX},${elementScaleY})`,
       ].join(' '),
-      opacity: element.opacity,
+      opacity: elementOpacity,
       mixBlendMode: element.blendMode as CSSProperties['mixBlendMode'],
     }}
   >
@@ -32,16 +52,6 @@ export function VisualContainer(props: VisualContainerProps){
       height: '100%',
       transformOrigin: 'center',
       position: 'relative',
-      // transform: [
-      //   `translate(${animationData.x}px,${animationData.y}px)`,
-      //   `translate(${animationData.translateX}%,${animationData.translateY}%)`,
-      //   `rotate(${animationData.rotate}deg)`,
-      //   `scale(${animationData.scaleX},${animationData.scaleY})`,
-      // ].join(' '),
-      // opacity: animationData.opacity,
-      // clipPath: animationData.clipPath || shapeToClipPath(animationData) || shapeToClipPath(element),
-      // background: animationData.background || element.background,
-      // filter: filterExtend(`${element.filter || ''} ${animationData.filter || ''}`),
     }}>{props.children}</div>
   </div>
 }

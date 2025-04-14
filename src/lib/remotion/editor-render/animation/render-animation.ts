@@ -15,23 +15,45 @@ export class RenderKeyFrameAnimation extends RenderAnimation{
     super();
   }
 
+  private getBothSideKeyFrameAnim(time: number, keyframes: KeyFrameAnimation['keyframes']){
+    const sortedKeyframes = [...keyframes].sort((a, b) => a.start - b.start);
+    const preKeyframeIndex = sortedKeyframes.findIndex((keyframe, index) => (keyframe.start <= time) && (!sortedKeyframes[index + 1] || time < sortedKeyframes[index + 1].start));
+    const preKeyframe = preKeyframeIndex !== -1 ? sortedKeyframes[preKeyframeIndex] : undefined;
+    const nextKeyframe = preKeyframeIndex + 1 < sortedKeyframes.length ? sortedKeyframes[preKeyframeIndex + 1] : undefined;
+    return {
+      preKeyframe, nextKeyframe
+    }
+  }
+
   getAnimationProperty(time: number){
     const { keyframes } = this.keyframeData;
-    const currentKeyframe = keyframes.find((keyframe) => (keyframe.from >= time && keyframe.from < time + keyframe.duration));
-    if(!currentKeyframe) return {};
     const {
-      transform, from:fromTime, duration 
-    } = currentKeyframe;
-    const {
-      from: fromProps, to: toProps, timing, specificTiming
-    } = transform;
+      preKeyframe, nextKeyframe
+    } = this.getBothSideKeyFrameAnim(time, keyframes);
 
-    const currentProps:BasicAnimationAttribute= {};
-    Object.entries(fromProps).forEach(([animAttr])=>{
-      if(!toProps[animAttr]) return;
-      const easingFn = getAnimationEasing(specificTiming?.[animAttr] ||  timing)
-      currentProps[animAttr] = interpolate((time - fromTime), [0, duration],[fromProps[animAttr], toProps[animAttr]],{ easing: easingFn } );
+    let currentProps:BasicAnimationAttribute= {};
+    console.log({
+      preKeyframe, nextKeyframe
     })
+    if(!preKeyframe && keyframes.length > 0){
+      currentProps = keyframes[0].transform.attributes
+    }else if(preKeyframe && !nextKeyframe){
+      currentProps = preKeyframe.transform.attributes
+    }else if(preKeyframe && nextKeyframe){
+      const animFrom = preKeyframe.start;  
+      const animTo = nextKeyframe.start;
+      const defaultTiming = preKeyframe.transform.timing || nextKeyframe.transform.timing;
+      const specificTimingMap = preKeyframe.transform.specificTiming
+      const fromProps = preKeyframe.transform.attributes;
+      const toProps = nextKeyframe.transform.attributes;
+
+      Object.entries(fromProps).forEach(([animAttr])=>{
+        if(typeof toProps[animAttr] === 'undefined') return;
+        const easingFn = getAnimationEasing(specificTimingMap?.[animAttr] ||  defaultTiming)
+        currentProps[animAttr] = interpolate((time - animFrom), [0, animTo - animFrom],[fromProps[animAttr], toProps[animAttr]],{ easing: easingFn } );
+      })
+    }
+
     return currentProps;
   }
 }

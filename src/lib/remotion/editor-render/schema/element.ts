@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { AnimationDataSchema } from "./animation.ts";
+import { AllAnimationSchema } from "./animation.ts";
 import { RectSchema } from "./common.ts";
 
 
@@ -47,7 +47,7 @@ export const DisplayElement = BaseElementSchema.extend({
   blendMode: z.string().optional(),
   /** opacity 0-1 */
   opacity: z.number().optional(),
-  animation: AnimationDataSchema.optional(),
+  animation: AllAnimationSchema.optional(),
   /** emphasize the current element or darken and blur other areas to achieve the "spotlight" effect. */
   mask: z.string().optional(),
   background: z.string().optional(),
