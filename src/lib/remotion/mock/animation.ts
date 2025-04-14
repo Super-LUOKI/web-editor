@@ -52,11 +52,25 @@ export const AnimationDraft: RenderDraftData = {
               }
             },
             {
+              start: 3,
+              transform:{
+                attributes:{
+                  x: 300,
+                  y: -200,
+                  // rotate: 180,
+                  // scaleX: 1.5,
+                  // scaleY: 1.5,
+                  // opacity: 0
+                },
+                timing: { type: 'linear' }
+              }
+            },
+            {
               start: 6,
               transform:{
                 attributes:{
                   x: 300,
-                  y: 0,
+                  y: 200,
                   // rotate: 180,
                   // scaleX: 1.5,
                   // scaleY: 1.5,
