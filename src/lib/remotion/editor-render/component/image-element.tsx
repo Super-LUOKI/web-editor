@@ -7,9 +7,9 @@ import { VisualContainer } from "./visual-container.tsx";
 import { CorrespondElementAssetPair } from "../schema/util.ts";
 import { calcCropStyle } from "../utils/style.ts";
 
-type ImageProps = CorrespondElementAssetPair<'image'>
+type ImageElementProps = CorrespondElementAssetPair<'image'>
 
-export function Image(props: ImageProps){
+export function ImageElement(props: ImageElementProps){
   const {
     element, asset
   } = props

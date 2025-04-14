@@ -1,4 +1,4 @@
-import { Image } from "./image.tsx";
+import { ImageElement } from "./image-element.tsx";
 import { AllAsset, } from "../schema/asset.ts";
 import { AllElement, } from "../schema/element.ts";
 
@@ -12,7 +12,7 @@ export function DisplayElement(props: DisplayElementProps) {
     element, asset
   } = props
   if (element.type === 'image' && asset?.type === 'image') {
-    return <Image element={element} asset={asset}/>
+    return <ImageElement element={element} asset={asset}/>
   }
   return null
 }
