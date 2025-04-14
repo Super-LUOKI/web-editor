@@ -26,5 +26,22 @@ export function VisualContainer(props: VisualContainerProps){
       opacity: element.opacity,
       mixBlendMode: element.blendMode as CSSProperties['mixBlendMode'],
     }}
-  >{props.children}</div>
+  >
+    <div style={{
+      width: '100%',
+      height: '100%',
+      transformOrigin: 'center',
+      position: 'relative',
+      // transform: [
+      //   `translate(${animationData.x}px,${animationData.y}px)`,
+      //   `translate(${animationData.translateX}%,${animationData.translateY}%)`,
+      //   `rotate(${animationData.rotate}deg)`,
+      //   `scale(${animationData.scaleX},${animationData.scaleY})`,
+      // ].join(' '),
+      // opacity: animationData.opacity,
+      // clipPath: animationData.clipPath || shapeToClipPath(animationData) || shapeToClipPath(element),
+      // background: animationData.background || element.background,
+      // filter: filterExtend(`${element.filter || ''} ${animationData.filter || ''}`),
+    }}>{props.children}</div>
+  </div>
 }

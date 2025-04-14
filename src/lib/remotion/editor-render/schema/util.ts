@@ -1,5 +1,8 @@
 import { AllAsset, } from "./asset.ts";
 import { AllElement, } from "./element.ts";
+import {
+  AllAnimationTimingType, AnimationTiming
+} from "../schema/animation-timing.ts";
 
 
 export type AllAssetType = AllAsset['type']
@@ -24,8 +27,8 @@ export type CorrespondElementAssetPair<E extends AllElementType> = {
 }
 
 export type AssetTypeOfElementType<T extends AllElementType> = Extract<ElementAssetTypePair, { element: T }>['asset']
-
 export type AssetOfElementType<T extends AllElementType> = AssetOfType<AssetTypeOfElementType<T>>
+export type AnimationTimingOfType<T extends AllAnimationTimingType> = Extract<AnimationTiming, { type: T }>
 
 export type AllElementTypeAllowString = AllElementType | string
 export type AllAssetTypeAllowString = AllAssetType | string
