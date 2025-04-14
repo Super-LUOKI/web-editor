@@ -16,11 +16,11 @@ export function VisualContainer(props: VisualContainerProps){
   const currentFrame = useCurrentFrame()
   const { element } = props
     
-  const animatoin = useMemo(()=>AnimationFactory.createAnimation(element), [element])
+  const animation = useMemo(()=>AnimationFactory.createAnimation(element), [element])
 
   const animAttribute = useMemo(()=>{
-    return animatoin?.getAnimationProperty(currentFrame / fps)
-  }, [animatoin, currentFrame, fps])
+    return animation?.getAnimationProperty(currentFrame / fps)
+  }, [animation, currentFrame, fps])
     
   const elementX = typeof animAttribute?.x !== 'undefined' ? animAttribute.x : element.x;
   const elementY = typeof animAttribute?.y !== 'undefined' ? animAttribute.y :  element.y;
