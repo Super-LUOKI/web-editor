@@ -1,6 +1,9 @@
-import { Header } from "@/feature/editor/page/header.tsx";
-import { Stage } from "@/feature/editor/page/stage.tsx";
-import { Timeline } from "@/feature/editor/page/timeline.tsx";
+import { EditorHeader } from "@/feature/editor/block/editor-header.tsx";
+import { EditorSidebar } from "@/feature/editor/block/editor-sidebar.tsx";
+import { PropertyPanel } from "@/feature/editor/block/property-panel";
+import { ResourcePanel } from "@/feature/editor/block/resource-panel";
+import { Stage } from "@/feature/editor/block/stage/stage.tsx";
+import { Timeline } from "@/feature/editor/block/timeline/timeline.tsx";
 
 type EditorPageProps = {
     videoId?: string
@@ -10,14 +13,18 @@ export function EditorPage(props: EditorPageProps) {
   const { videoId } = props
   console.log('videoId', videoId)
   return (
-    <div className='size-full flex-col'>
-      <Header/>
-      <div className='w-full h-0 flex-1'>
-        <div>resource panel</div>
-        <Stage/>
-        <div>property panel</div>
+    <div className='size-full flex flex-row'>
+      <EditorSidebar/>
+      <div className='h-full w-0 flex flex-col flex-1'>
+        <EditorHeader/>
+        <div className='w-full h-0 flex-1 flex flex-row'>
+          <ResourcePanel/>
+          <Stage className='w-0 flex-1 h-full'/>
+          <PropertyPanel/>
+        </div>
+        <Timeline/>
       </div>
-      <Timeline/>
+
     </div>
   )
 }

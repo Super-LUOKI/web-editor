@@ -93,6 +93,7 @@ export const AnimationDraft: RenderDraftData = {
       },
     ]
   },
+  background: 'black',
   meta: {
     width: 1920,
     height: 1080,

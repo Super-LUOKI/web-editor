@@ -5,7 +5,7 @@ import {
   AllAssetType,
   AllAssetTypeAllowString,
   AllElementType,
-  AllElementTypeAllowString,
+  AllElementTypeAllowString, AssetOfElementType,
   AssetOfType,
   ElementOfType
 } from "../schema/util.ts";
@@ -36,13 +36,15 @@ export function calculateDraftDuration(draft: RenderDraftData) {
 }
 
 export function isTargetElement<T extends AllElementType>(
-  element: {type: AllElementTypeAllowString},
+  element: {type: AllElementTypeAllowString} | undefined,
   type: T
 ): element is ElementOfType<T> {
+  if(!element) return false;
   return element.type === type;
 }
 
-export function isTargetAsset<T extends AllAssetType>(asset: {type: AllAssetTypeAllowString}, type: T): asset is AssetOfType<T> {
+export function isTargetAsset<T extends AllAssetType>(asset: {type: AllAssetTypeAllowString} | undefined, type: T): asset is AssetOfType<T> {
+  if(!asset) return false;
   return asset.type === type;
 }
 
@@ -55,6 +57,12 @@ export function getElements(draft: RenderDraftData, need: (element: AllElement) 
   })
   return elements;
 }
+
+export function getAsset<T extends Pick<AllElement, 'assetId' | 'type'>>(draft:RenderDraftData, element: T): AssetOfElementType<T['type']>| undefined{
+  if(!element.assetId) return undefined;
+  return draft.timeline.assets[element.assetId] as AssetOfElementType<T['type']> | undefined;
+}
+
 
 
 export function getTrimProps(el: AllElement, fps: number) {

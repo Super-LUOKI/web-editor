@@ -27,10 +27,11 @@ export const MetaSchema = z.object({
   fps: z.number(),
 })
 
-export const EditorDraftDataSchema = z.object({
+export const RenderDraftDataSchema = z.object({
   name: z.string().optional(),
   timeline: TimelineSchema,
+  background: z.string().optional(),
   meta: MetaSchema,
 });
 
-export type RenderDraftData = z.infer<typeof EditorDraftDataSchema>;
+export type RenderDraftData = z.infer<typeof RenderDraftDataSchema>;
