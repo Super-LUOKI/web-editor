@@ -47,6 +47,7 @@ export function SideBarLayout(props: PropsWithChildren) {
         <div className='flex flex-col gap-2'>
           {sidebarList.map(item => (
             <Link
+              key={item.to}
               to={item.to}>
               <div
                 className={cn('flex items-center h-[46px] p-3 rounded-lg text-sm',
