@@ -7,6 +7,7 @@ import {
 
 import { AnimationFactory } from "../animation/animation-factory.ts";
 import { DisplayElement } from "../schema/element.ts";
+import { getAttributeWithOverwrite } from "../utils/draft.ts";
 
 type VisualContainerProps = PropsWithChildren<{
     element: DisplayElement
@@ -22,12 +23,14 @@ export function VisualContainer(props: VisualContainerProps){
     return animation?.getAnimationProperty(currentFrame / fps - element.start)
   }, [animation, currentFrame, fps])
     
-  const elementX = typeof animAttribute?.x !== 'undefined' ? animAttribute.x : element.x;
-  const elementY = typeof animAttribute?.y !== 'undefined' ? animAttribute.y :  element.y;
-  const elementRotate = typeof animAttribute?.rotate !== 'undefined' ? animAttribute.rotate : element.rotate;
-  const elementScaleX = typeof animAttribute?.scaleX !== 'undefined' ? animAttribute.scaleX : element.scaleX;
-  const elementScaleY = typeof animAttribute?.scaleY !== 'undefined' ? animAttribute.scaleY : element.scaleY;
-  const elementOpacity = typeof animAttribute?.opacity !== 'undefined' ? animAttribute.opacity : element.opacity;
+    
+  const elementX = getAttributeWithOverwrite(element, 'x', animAttribute,0)
+  const elementY = getAttributeWithOverwrite(element, 'y', animAttribute,0)
+  const elementRotate = getAttributeWithOverwrite(element, 'rotate', animAttribute,0)
+  const elementScaleX = getAttributeWithOverwrite(element, 'scaleX', animAttribute,1)
+  const elementScaleY = getAttributeWithOverwrite(element, 'scaleY', animAttribute,1)
+  const elementOpacity = getAttributeWithOverwrite(element, 'opacity', animAttribute,1)
+    
 
   return <div
     style={{

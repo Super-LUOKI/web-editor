@@ -1,3 +1,4 @@
+import { CSSProperties } from "react";
 import { z } from "zod";
 
 import { AllAnimationSchema } from "./animation.ts";
@@ -6,17 +7,21 @@ import { RectSchema } from "./common.ts";
 
 export const BaseElementSchema = z.object({
   id: z.string(),
+  start: z.number(),
+  length: z.number(),
   assetId: z.string().optional(),
   parent: z.string().optional(),
   children: z.array(z.string()).optional(),
-  start: z.number(),
-  length: z.number(),
   hidden: z.boolean().optional(),
   /** display in timeline clip */
   name: z.string().optional(),
 })
 
 export const DisplayElement = BaseElementSchema.extend({
+  /** right is positive */
+  x: z.number(),
+  /** down is positive */
+  y: z.number(),
   /**
    * display size width
    * do not modify it, it will be be automatically generated.
@@ -27,14 +32,10 @@ export const DisplayElement = BaseElementSchema.extend({
    * do not modify it, it will be be automatically generated.
    */
   height: z.number().optional(),
-  /** right is positive */
-  x: z.number(),
-  /** down is positive */
-  y: z.number(),
-  scaleX: z.number(),
-  scaleY: z.number(),
+  scaleX: z.number().optional(),
+  scaleY: z.number().optional(),
   /** right rotate is positive */
-  rotate: z.number(),
+  rotate: z.number().optional(),
 
   crop: RectSchema.optional(),
   /**
@@ -59,6 +60,12 @@ export const ImageElementSchema = DisplayElement.extend({
   assetId: z.string(),
 })
 
+export const TextElementSchema = DisplayElement.extend({
+  type:z.literal('text'),
+  text: z.string(),
+  style: z.custom<CSSProperties>().optional()
+})
+
 export const AudioElementSchema = BaseElementSchema.extend({
   type: z.literal('audio'),
   assetId: z.string(),
@@ -74,6 +81,7 @@ export const AudioElementSchema = BaseElementSchema.extend({
 export const AllElementSchema = z.discriminatedUnion('type', [
   ImageElementSchema,
   AudioElementSchema,
+  TextElementSchema
 ])
 
 
@@ -81,4 +89,5 @@ export type DisplayElement = z.infer<typeof DisplayElement>;
 
 export type ImageElement = z.infer<typeof ImageElementSchema>;
 export type AudioElement = z.infer<typeof AudioElementSchema>;
+export type TextElement = z.infer<typeof TextElementSchema>;
 export type AllElement = z.infer<typeof AllElementSchema>;

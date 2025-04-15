@@ -14,7 +14,8 @@ type ElementAssetTypePair =
 
 export const elementAssetPair:Record<AllElementType, string | null> = {
   image: 'image',
-  audio: 'audio'
+  audio: 'audio',
+  text: null
 }
 
 export type ElementOfType<T extends AllElementType> = Extract<AllElement, { type: T }>

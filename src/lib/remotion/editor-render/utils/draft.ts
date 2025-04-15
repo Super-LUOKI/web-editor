@@ -72,3 +72,11 @@ export function getTrimProps(el: AllElement, fps: number) {
 
   return out;
 }
+
+export function getAttributeWithOverwrite<T extends object, A extends keyof T>(obj: T, attr: A, overwrite?: Partial<T>, defaultValue?: T[A]){
+  const value = overwrite?.[attr] ?? obj[attr];
+  if (value === undefined) {
+    return defaultValue;
+  }
+  return value;
+}

@@ -8,9 +8,9 @@ import { AnimationFactory } from "../animation/animation-factory.ts";
 import { CorrespondElementAssetPair } from "../schema/util.ts";
 import { getTrimProps } from "../utils/draft.ts";
 
-type AudioElementProps = CorrespondElementAssetPair<'audio'>
+type AudioWidgetProps = CorrespondElementAssetPair<'audio'>
 
-export function AudioElement(props: AudioElementProps) {
+export function AudioWidget(props: AudioWidgetProps) {
   const {
     element, asset
   } = props
