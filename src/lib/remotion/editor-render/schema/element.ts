@@ -66,9 +66,12 @@ export const AudioElementSchema = BaseElementSchema.extend({
   startFrom: z.number().optional(),
   endAt: z.number().optional(),
   loop: z.boolean().optional(),
+  animation: AllAnimationSchema.optional(),
+  /** 0-1 */
+  volume: z.number().optional(),
 })
 
-export const AllElement = z.discriminatedUnion('type', [
+export const AllElementSchema = z.discriminatedUnion('type', [
   ImageElementSchema,
   AudioElementSchema,
 ])
@@ -78,4 +81,4 @@ export type DisplayElement = z.infer<typeof DisplayElement>;
 
 export type ImageElement = z.infer<typeof ImageElementSchema>;
 export type AudioElement = z.infer<typeof AudioElementSchema>;
-export type AllElement = z.infer<typeof AllElement>;
+export type AllElement = z.infer<typeof AllElementSchema>;

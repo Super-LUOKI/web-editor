@@ -19,7 +19,7 @@ export function VisualContainer(props: VisualContainerProps){
   const animation = useMemo(()=>AnimationFactory.createAnimation(element), [element])
 
   const animAttribute = useMemo(()=>{
-    return animation?.getAnimationProperty(currentFrame / fps)
+    return animation?.getAnimationProperty(currentFrame / fps - element.start)
   }, [animation, currentFrame, fps])
     
   const elementX = typeof animAttribute?.x !== 'undefined' ? animAttribute.x : element.x;

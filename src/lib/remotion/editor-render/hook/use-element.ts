@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 
 import {
-  AllElement,
+  AllElementSchema,
   AudioElement,
 } from "../schema/element.ts";
 import { RenderDraftData } from "../schema/schema.ts";
@@ -11,7 +11,7 @@ import {
 
 export function useElements(draft: RenderDraftData,){
   return useMemo(() => {
-    const displayElements:AllElement[] = [];
+    const displayElements:AllElementSchema[] = [];
     const audioElements:AudioElement[] = [];
     shallowWalkTracksElement(draft, draft.timeline.tracks, element => {
       if(isTargetElement(element, 'audio')) {

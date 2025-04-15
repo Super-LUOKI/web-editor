@@ -28,7 +28,7 @@ export const AudioAssetSchema = AbstractAssetSchema.extend({
   duration: z.number(),
 })
 
-export const AllAsset = z.discriminatedUnion('type',[
+export const AllAssetSchema = z.discriminatedUnion('type',[
   ImageAssetSchema,
   AudioAssetSchema
 ])
@@ -36,4 +36,4 @@ export const AllAsset = z.discriminatedUnion('type',[
 export type SizeAsset = z.infer<typeof SizeAssetSchema>;
 export type ImageAsset = z.infer<typeof ImageAssetSchema>;
 export type AudioAsset = z.infer<typeof AudioAssetSchema>;
-export type AllAsset = z.infer<typeof AllAsset>;
+export type AllAsset = z.infer<typeof AllAssetSchema>;

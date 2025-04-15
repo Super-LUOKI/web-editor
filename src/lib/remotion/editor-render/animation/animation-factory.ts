@@ -1,10 +1,10 @@
 import {
   RenderAnimation, RenderKeyFrameAnimation
 } from "./render-animation.ts";
-import { DisplayElement } from "../schema/element.ts";
+import { AllElement } from "../schema/element.ts";
 
 export class AnimationFactory{
-  static createAnimation(element: DisplayElement): RenderAnimation | null {
+  static createAnimation(element: Pick<AllElement, 'animation'>): RenderAnimation | null {
     if(!element.animation) return null;
     switch (element.animation.type){
       case "keyframe":

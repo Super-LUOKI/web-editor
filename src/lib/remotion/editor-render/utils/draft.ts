@@ -55,3 +55,20 @@ export function getElements(draft: RenderDraftData, need: (element: AllElement) 
   })
   return elements;
 }
+
+
+export function getTrimProps(el: AllElement, fps: number) {
+  const data = {
+    startFrom: undefined, endAt: undefined, ...el 
+  };
+  const out = {} as Partial<{ startFrom: number; endAt: number }>;
+
+  if (data.startFrom !== undefined) {
+    out.startFrom = Math.floor(data.startFrom * fps);
+  }
+  if (data.endAt !== undefined) {
+    out.endAt = Math.ceil(data.endAt * fps) + 1; // need add 1 frame for end, else will be white screen on end
+  }
+
+  return out;
+}

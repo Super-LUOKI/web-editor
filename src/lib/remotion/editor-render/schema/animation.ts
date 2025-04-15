@@ -9,7 +9,8 @@ export const SupportAttribute = z.union([
   z.literal(  'rotate'),
   z.literal(  'scaleX'),
   z.literal(  'scaleY'),
-  z.literal('opacity')
+  z.literal('opacity'),
+  z.literal('volume')
 ])
 
 export const BasicAnimationAttributeSchema = z.record(SupportAttribute, z.number().optional())

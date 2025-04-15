@@ -30,7 +30,6 @@ export class RenderKeyFrameAnimation extends RenderAnimation{
     const {
       preKeyframe, nextKeyframe
     } = this.getBothSideKeyFrameAnim(time, keyframes);
-
     let currentProps:BasicAnimationAttribute= {};
     if(!preKeyframe && keyframes.length > 0){
       currentProps = keyframes[0].transform.attributes
