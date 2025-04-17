@@ -9,9 +9,7 @@ type DisplayWidgetProps = {
 }
 
 export function DisplayWidget(props: DisplayWidgetProps) {
-  const {
-    element, asset
-  } = props
+  const { element, asset } = props
   if (element.type === 'image' && asset?.type === 'image') {
     return <ImageWidget element={element} asset={asset}/>
   }

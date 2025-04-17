@@ -1,12 +1,8 @@
-import {
-  Link, useRouterState
-} from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import clsx from "clsx";
 import { PropsWithChildren } from "react";
 
-import {
-  Avatar, AvatarFallback, AvatarImage
-} from "@/component/ui/avatar.tsx";
+import { Avatar, AvatarFallback, AvatarImage } from "@/component/ui/avatar.tsx";
 import { cn } from "@/lib/shadcn/util.ts";
 
 type SidebarItem = {

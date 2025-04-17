@@ -1,6 +1,4 @@
-import {
-  forwardRef, MouseEventHandler
-} from "react";
+import { forwardRef, MouseEventHandler } from "react";
 
 interface IconParkProps {
     icon: string;
@@ -23,9 +21,7 @@ interface IconParkProps {
  * <IconPark icon="add" size={32} />
  */
 export const IconPark = forwardRef<HTMLDivElement, IconParkProps>((props, ref) => {
-  const {
-    icon, className, ...rest 
-  } = props;
+  const { icon, className, ...rest } = props;
   return <iconpark-icon ref={ref} name={icon} class={className} {...rest}></iconpark-icon>;
 });
 

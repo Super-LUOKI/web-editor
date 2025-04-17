@@ -1,9 +1,5 @@
-import {
-  CSSProperties, PropsWithChildren, useMemo
-} from "react";
-import {
-  useCurrentFrame, useVideoConfig
-} from "remotion";
+import { CSSProperties, PropsWithChildren, useMemo } from "react";
+import { useCurrentFrame, useVideoConfig } from "remotion";
 
 import { AnimationFactory } from "../animation/animation-factory.ts";
 import { DisplayElement } from "../schema/element.ts";
@@ -24,12 +20,12 @@ export function VisualContainer(props: VisualContainerProps){
   }, [animation, currentFrame, fps])
     
     
-  const elementX = getAttributeWithOverwrite(element, 'x', animAttribute,0)
-  const elementY = getAttributeWithOverwrite(element, 'y', animAttribute,0)
-  const elementRotate = getAttributeWithOverwrite(element, 'rotate', animAttribute,0)
-  const elementScaleX = getAttributeWithOverwrite(element, 'scaleX', animAttribute,1)
-  const elementScaleY = getAttributeWithOverwrite(element, 'scaleY', animAttribute,1)
-  const elementOpacity = getAttributeWithOverwrite(element, 'opacity', animAttribute,1)
+  const elementX = getAttributeWithOverwrite(element, 'x', animAttribute, 0)
+  const elementY = getAttributeWithOverwrite(element, 'y', animAttribute, 0)
+  const elementRotate = getAttributeWithOverwrite(element, 'rotate', animAttribute, 0)
+  const elementScaleX = getAttributeWithOverwrite(element, 'scaleX', animAttribute, 1)
+  const elementScaleY = getAttributeWithOverwrite(element, 'scaleY', animAttribute, 1)
+  const elementOpacity = getAttributeWithOverwrite(element, 'opacity', animAttribute, 1)
     
 
   return <div

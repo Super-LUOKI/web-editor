@@ -1,6 +1,4 @@
-import {
-  createFileRoute, Outlet
-} from '@tanstack/react-router'
+import { createFileRoute, Outlet } from '@tanstack/react-router'
 
 import { SideBarLayout } from "@/common/component/side-bar-layout.tsx";
 

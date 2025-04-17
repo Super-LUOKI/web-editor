@@ -1,8 +1,6 @@
 import { cn } from "@/lib/shadcn/util.ts"
 
-function Skeleton({
-  className, ...props 
-}: React.ComponentProps<"div">) {
+function Skeleton({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="skeleton"

@@ -1,6 +1,4 @@
-import {
-  Sequence,SequenceProps
-} from "remotion";
+import { Sequence, SequenceProps } from "remotion";
 
 import { useFrameRange } from "../hook/use-frame-range.tsx";
 import { DisplayElement } from "../schema/element.ts";
@@ -12,12 +10,8 @@ type RenderSequenceProps = SequenceProps & {
 
 
 export function RenderSequence(props: RenderSequenceProps){
-  const {
-    element, ...rest
-  } = props
-  const {
-    frameStart, frameDuration
-  } = useFrameRange(element)
+  const { element, ...rest } = props
+  const { frameStart, frameDuration } = useFrameRange(element)
 
   if(element.hidden || frameDuration <= 0) return null
 

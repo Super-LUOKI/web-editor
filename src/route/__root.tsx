@@ -1,6 +1,4 @@
-import {
-  createRootRoute, Outlet
-} from '@tanstack/react-router'
+import { createRootRoute, Outlet } from '@tanstack/react-router'
 
 import { IconParkProvider } from "@/lib/iconpark/provider.tsx";
 

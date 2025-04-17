@@ -12,9 +12,7 @@ export const RenderPropsSchema = z.object({ draft:RenderDraftDataSchema })
 
 export function Renderer(props: z.infer<typeof RenderPropsSchema>) {
   const { draft } = props;
-  const {
-    audioElements, displayElements
-  } = useElements(draft)
+  const { audioElements, displayElements } = useElements(draft)
 
 
   return (

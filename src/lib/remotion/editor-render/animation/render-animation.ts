@@ -1,9 +1,7 @@
 import { interpolate } from "remotion";
 
 import { getAnimationEasing } from "./util.ts";
-import {
-  BasicAnimationAttribute, KeyFrameAnimation
-} from "../schema/animation.ts";
+import { BasicAnimationAttribute, KeyFrameAnimation } from "../schema/animation.ts";
 
 
 export abstract class RenderAnimation{
@@ -20,16 +18,12 @@ export class RenderKeyFrameAnimation extends RenderAnimation{
     const preKeyframeIndex = sortedKeyframes.findIndex((keyframe, index) => (keyframe.start <= time) && (!sortedKeyframes[index + 1] || time < sortedKeyframes[index + 1].start));
     const preKeyframe = preKeyframeIndex !== -1 ? sortedKeyframes[preKeyframeIndex] : undefined;
     const nextKeyframe = preKeyframeIndex + 1 < sortedKeyframes.length ? sortedKeyframes[preKeyframeIndex + 1] : undefined;
-    return {
-      preKeyframe, nextKeyframe
-    }
+    return { preKeyframe, nextKeyframe }
   }
 
   getAnimationProperty(time: number){
     const { keyframes } = this.keyframeData;
-    const {
-      preKeyframe, nextKeyframe
-    } = this.getBothSideKeyFrameAnim(time, keyframes);
+    const { preKeyframe, nextKeyframe } = this.getBothSideKeyFrameAnim(time, keyframes);
     let currentProps:BasicAnimationAttribute= {};
     if(!preKeyframe && keyframes.length > 0){
       currentProps = keyframes[0].transform.attributes
@@ -46,7 +40,7 @@ export class RenderKeyFrameAnimation extends RenderAnimation{
       Object.entries(fromProps).forEach(([animAttr])=>{
         if(typeof toProps[animAttr] === 'undefined') return;
         const easingFn = getAnimationEasing(specificTimingMap?.[animAttr] ||  defaultTiming)
-        currentProps[animAttr] = interpolate((time - animFrom), [0, animTo - animFrom],[fromProps[animAttr], toProps[animAttr]],{ easing: easingFn } );
+        currentProps[animAttr] = interpolate((time - animFrom), [0, animTo - animFrom], [fromProps[animAttr], toProps[animAttr]], { easing: easingFn } );
       })
     }
 

@@ -1,8 +1,6 @@
 import { AllAsset, } from "./asset.ts";
 import { AllElement, } from "./element.ts";
-import {
-  AllAnimationTimingType, AnimationTiming
-} from "../schema/animation-timing.ts";
+import { AllAnimationTimingType, AnimationTiming } from "../schema/animation-timing.ts";
 
 
 export type AllAssetType = AllAsset['type']

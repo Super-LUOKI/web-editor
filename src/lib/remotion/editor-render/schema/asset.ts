@@ -1,9 +1,7 @@
 import { z } from "zod";
 
 
-export const AbstractAssetSchema = z.object({
-  id: z.string(), type: z.string()
-})
+export const AbstractAssetSchema = z.object({ id: z.string(), type: z.string() })
 
 export const SizeAssetSchema = AbstractAssetSchema.extend({
   width: z.number(),
@@ -28,7 +26,7 @@ export const AudioAssetSchema = AbstractAssetSchema.extend({
   duration: z.number(),
 })
 
-export const AllAssetSchema = z.discriminatedUnion('type',[
+export const AllAssetSchema = z.discriminatedUnion('type', [
   ImageAssetSchema,
   AudioAssetSchema
 ])

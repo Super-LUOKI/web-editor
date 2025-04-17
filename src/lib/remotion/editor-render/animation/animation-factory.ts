@@ -1,6 +1,4 @@
-import {
-  RenderAnimation, RenderKeyFrameAnimation
-} from "./render-animation.ts";
+import { RenderAnimation, RenderKeyFrameAnimation } from "./render-animation.ts";
 import { AllElement } from "../schema/element.ts";
 
 export class AnimationFactory{

@@ -5,9 +5,7 @@ import {
   AudioElement,
 } from "../schema/element.ts";
 import { RenderDraftData } from "../schema/schema.ts";
-import {
-  isTargetElement, shallowWalkTracksElement
-} from "../utils/draft.ts";
+import { isTargetElement, shallowWalkTracksElement } from "../utils/draft.ts";
 
 export function useElements(draft: RenderDraftData,){
   return useMemo(() => {

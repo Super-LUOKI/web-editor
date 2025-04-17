@@ -66,9 +66,7 @@ export function getAsset<T extends Pick<AllElement, 'assetId' | 'type'>>(draft:R
 
 
 export function getTrimProps(el: AllElement, fps: number) {
-  const data = {
-    startFrom: undefined, endAt: undefined, ...el 
-  };
+  const data = { startFrom: undefined, endAt: undefined, ...el };
   const out = {} as Partial<{ startFrom: number; endAt: number }>;
 
   if (data.startFrom !== undefined) {

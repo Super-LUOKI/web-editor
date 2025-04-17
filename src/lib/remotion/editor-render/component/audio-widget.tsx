@@ -1,7 +1,5 @@
 import { useMemo } from "react";
-import {
-  useVideoConfig, Audio as RemotionAudio, useCurrentFrame
-} from "remotion";
+import { useVideoConfig, Audio as RemotionAudio, useCurrentFrame } from "remotion";
 
 import { RenderSequence } from "./render-sequence.tsx";
 import { AnimationFactory } from "../animation/animation-factory.ts";
@@ -11,9 +9,7 @@ import { getTrimProps } from "../utils/draft.ts";
 type AudioWidgetProps = CorrespondElementAssetPair<'audio'>
 
 export function AudioWidget(props: AudioWidgetProps) {
-  const {
-    element, asset
-  } = props
+  const { element, asset } = props
     
   const { fps } = useVideoConfig();
   const currentFrame = useCurrentFrame();
