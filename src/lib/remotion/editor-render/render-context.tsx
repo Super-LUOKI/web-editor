@@ -1,16 +1,17 @@
-import { createContext, PropsWithChildren, useContext } from "react";
+import { createContext, PropsWithChildren, RefObject, useContext } from "react";
 
 export type RenderContextValue = {
-    test: string
+    /** { [elementId]: {parent: ParentElementId, children: ChildElementId[], ref: ElementDomRef} } */
+    box: Partial<Record<string, { parent?: string; children?: string[], ref?: RefObject<HTMLElement | undefined> }>>,
 }
 
 const RenderContext = createContext<RenderContextValue | null>(null)
 
 export function getDefaultDraftRenderContextValue(): RenderContextValue {
-  return { test: 'luoking' }
+  return { box:{} }
 }
 
-export function DraftRenderProvider(props: PropsWithChildren<{value?: RenderContextValue}>) {
+export function DraftRenderProvider(props: PropsWithChildren<{ value?: RenderContextValue }>) {
   const { value, children } = props
   return (
     <RenderContext.Provider value={value ?? getDefaultDraftRenderContextValue()}>{children}</RenderContext.Provider>
