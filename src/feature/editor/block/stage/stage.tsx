@@ -9,7 +9,9 @@ type StageProps = {
 export function Stage(props: StageProps) {
   const { className } = props
     
-  return <div className={cn('p-2 flex flex-center', className)}>
-    <DraftPlayer draft={AnimationDraft}/>
-  </div>
+  return (
+    <div className={cn('p-2 flex flex-center', className)}>
+      <DraftPlayer draft={AnimationDraft}/>
+    </div>
+  )
 }

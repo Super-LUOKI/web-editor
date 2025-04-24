@@ -20,7 +20,7 @@ export default tseslint.config({ ignores: ['dist'] }, {
   rules: {
     'object-curly-newline': ['error', {
       multiline: true,
-      minProperties: 5
+      minProperties: 8
     }],
     'comma-spacing': ['error', { before: false, after: true }],
     indent: ['error', 2, { SwitchCase: 1 }],
