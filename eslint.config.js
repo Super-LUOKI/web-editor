@@ -30,7 +30,7 @@ export default tseslint.config({ ignores: ['dist'] }, {
       alphabetize: { order: 'asc' },
       'newlines-between': 'always'
     }],
-    'react-refresh/only-export-components': ['warn', { allowConstantExport: true },],
+    'react-refresh/only-export-components': ['off'],
     'quote-props': ['error', 'as-needed', {
       keywords: false,
       unnecessary: true,
