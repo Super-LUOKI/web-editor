@@ -8,9 +8,11 @@ export type AllElementType = AllElement['type']
 
 // element type must be unique: element -> asset = 1:n
 type ElementAssetTypePair =
-    { element: 'image'; asset: 'image' } 
+    { element: 'image'; asset: 'image' } |
+    { element: 'audio'; asset: 'audio' } |
+    { element: 'text'; asset: never}
 
-export const elementAssetPair:Record<AllElementType, string | null> = {
+export const elementAssetPair: Record<AllElementType, string | null> = {
   image: 'image',
   audio: 'audio',
   text: null
@@ -21,8 +23,8 @@ export type ElementOfType<T extends AllElementType> = Extract<AllElement, { type
 export type AssetOfType<T extends AllAssetType> = Extract<AllAsset, { type: T }>
 
 export type CorrespondElementAssetPair<E extends AllElementType> = {
-  element: ElementOfType<E>,
-  asset: AssetOfElementType<E>
+    element: ElementOfType<E>,
+    asset: AssetOfElementType<E>
 }
 
 export type AssetTypeOfElementType<T extends AllElementType> = Extract<ElementAssetTypePair, { element: T }>['asset']

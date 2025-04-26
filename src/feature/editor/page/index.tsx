@@ -1,4 +1,4 @@
-import { PropsWithChildren, useState } from "react";
+import { useState } from "react";
 
 import { PlayerManagerProvider } from "@/feature/editor/block/context/player.tsx";
 import { EditorHeader } from "@/feature/editor/block/editor-header.tsx";
@@ -7,13 +7,15 @@ import { PropertyPanel } from "@/feature/editor/block/property-panel";
 import { ResourcePanel } from "@/feature/editor/block/resource-panel";
 import { Stage } from "@/feature/editor/block/stage";
 import { Timeline } from "@/feature/editor/block/timeline/timeline.tsx";
+import { DraftManager } from "@/feature/editor/manager/draft-manager.ts";
 import { PlayerManager } from "@/feature/editor/manager/player-manager.ts";
+import { editorMockDraft } from "@/feature/editor/util";
 
 type EditorPageProps = {
     videoId?: string
 }
 
-export function EditorPage(props: EditorPageProps) {
+function Editor(props: EditorPageProps) {
   const { videoId } = props
   console.log('videoId', videoId)
   return (
@@ -33,8 +35,11 @@ export function EditorPage(props: EditorPageProps) {
   )
 }
 
-export function EditorProvider(props: PropsWithChildren){
-  const [playerManager] = useState(new PlayerManager())
+export function EditorPage(props: EditorPageProps){
+  const [draftManager] = useState(new DraftManager(editorMockDraft))
+  const [playerManager] = useState(new PlayerManager(draftManager))
 
-  return <PlayerManagerProvider value={playerManager}>{props.children}</PlayerManagerProvider>
+  return <PlayerManagerProvider value={playerManager}>
+    <Editor { ...props}/>
+  </PlayerManagerProvider>
 }

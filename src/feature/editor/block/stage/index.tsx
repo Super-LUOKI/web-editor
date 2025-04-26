@@ -1,6 +1,7 @@
 import { StageInteraction } from "./stage-interaction";
+import { usePlayerManager } from "@/feature/editor/block/context/player.tsx";
+import { editorMockDraft } from "@/feature/editor/util";
 import { DraftPlayer } from "@/lib/remotion/editor-render/draft-player.tsx";
-import { AnimationDraft } from "@/lib/remotion/mock/animation.ts";
 import { cn } from '@/lib/shadcn/util';
 
 type StageProps = {
@@ -9,10 +10,15 @@ type StageProps = {
 
 export function Stage(props: StageProps) {
   const { className } = props
+  const playerManger = usePlayerManager();
     
   return (
     <div className={cn('p-2 flex flex-center relative', className)}>
-      <DraftPlayer draft={AnimationDraft}/>
+      <DraftPlayer ref={draftPlayer => {
+        if(!draftPlayer) return;
+        playerManger.setPlayer(draftPlayer.player);
+        playerManger.setContext(draftPlayer.context);
+      }} draft={editorMockDraft}/>
       <StageInteraction/>
     </div>
   )

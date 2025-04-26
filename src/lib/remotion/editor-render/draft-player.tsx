@@ -28,7 +28,7 @@ type PlayerProps = Omit<ComponentPropsWithoutRef<typeof RemotionPlayer>,
     onEnd?: () => void;
 }
 
-type DraftPlayerRef = {
+export type DraftPlayerRef = {
     player: RemotionPlayerRef | null;
     context: RenderContextValue;
 }

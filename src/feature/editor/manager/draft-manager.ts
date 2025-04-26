@@ -20,6 +20,7 @@ const initialState = { draft: emptyDraft }
 
 export class DraftManager{
   readonly store = createStore(immer(initState(initialState)))
+  private disposers: (() => void)[] = [];
 
   constructor(
     draft: RenderDraftData
@@ -31,6 +32,14 @@ export class DraftManager{
 
   get state(){
     return this.store.getState();
+  }
+
+  get timeline(){
+    return this.state.draft.timeline;
+  }
+
+  get meta(){
+    return this.state.draft.meta;
   }
 
   getElement<T extends AllElementType>(id: string, type: T){
@@ -52,5 +61,10 @@ export class DraftManager{
 
   updateElement(id: string, element: Partial<Omit<AllElement, "id">>){
     console.log("update element", id, element)
+  }
+
+  destroy(){
+    this.disposers.forEach((dispose) => dispose());
+    this.store.setState(initState)
   }
 }

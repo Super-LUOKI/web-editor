@@ -17,7 +17,7 @@ export const BaseElementSchema = z.object({
   name: z.string().optional(),
 })
 
-export const DisplayElement = BaseElementSchema.extend({
+export const DisplayElementSchema = BaseElementSchema.extend({
   /** right is positive */
   x: z.number(),
   /** down is positive */
@@ -55,12 +55,12 @@ export const DisplayElement = BaseElementSchema.extend({
 })
 
 
-export const ImageElementSchema = DisplayElement.extend({
+export const ImageElementSchema = DisplayElementSchema.extend({
   type: z.literal('image'),
   assetId: z.string(),
 })
 
-export const TextElementSchema = DisplayElement.extend({
+export const TextElementSchema = DisplayElementSchema.extend({
   type:z.literal('text'),
   text: z.string(),
   style: z.custom<CSSProperties>().optional()
@@ -85,7 +85,7 @@ export const AllElementSchema = z.discriminatedUnion('type', [
 ])
 
 
-export type DisplayElement = z.infer<typeof DisplayElement>;
+export type DisplayElement = z.infer<typeof DisplayElementSchema>;
 
 export type ImageElement = z.infer<typeof ImageElementSchema>;
 export type AudioElement = z.infer<typeof AudioElementSchema>;

@@ -1,4 +1,4 @@
-import { createContext } from "react";
+import { createContext, useContext } from "react";
 
 import { PlayerManager } from "@/feature/editor/manager/player-manager.ts";
 
@@ -13,9 +13,9 @@ export function PlayerManagerProvider({ children, value }: {children: React.Reac
 }
 
 export function usePlayerManager(){
-  const context = PlayerManagerContext
-  if (!context) {
+  const value = useContext(PlayerManagerContext)
+  if (!value) {
     throw new Error("usePlayerManager must be used within a PlayerManagerProvider")
   }
-  return context
+  return value
 }

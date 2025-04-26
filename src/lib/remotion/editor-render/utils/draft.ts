@@ -1,4 +1,4 @@
-import { AllElement } from "../schema/element.ts";
+import { AllElement, DisplayElement } from "../schema/element.ts";
 import { RenderDraftData } from "../schema/schema.ts";
 import { EditorTrack } from "../schema/track.ts";
 import {
@@ -46,6 +46,11 @@ export function isTargetElement<T extends AllElementType>(
 export function isTargetAsset<T extends AllAssetType>(asset: {type: AllAssetTypeAllowString} | undefined, type: T): asset is AssetOfType<T> {
   if(!asset) return false;
   return asset.type === type;
+}
+
+export function isDisplayElement<T extends AllElement>(element: T): element is T & DisplayElement {
+  const notDisplayElementType: AllElementType[] = []
+  return !notDisplayElementType.includes(element.type);
 }
 
 export function getElements(draft: RenderDraftData, need: (element: AllElement) => boolean) {

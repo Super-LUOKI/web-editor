@@ -10,4 +10,6 @@ export const SizeSchema = z.object({
   height: z.number(),
 })
 
+export type Point = z.infer<typeof PointSchema>;
+export type Size = z.infer<typeof SizeSchema>;
 export const RectSchema = PointSchema.merge(SizeSchema)
