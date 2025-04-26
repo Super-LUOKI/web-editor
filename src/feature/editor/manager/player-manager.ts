@@ -11,4 +11,5 @@ const initialState = {
 
 export class PlayerManager {
   readonly store = createStore(immer(initState(initialState)))
+
 }

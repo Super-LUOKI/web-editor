@@ -1,4 +1,4 @@
-import { combine } from "zustand/middleware/combine";
+import { combine } from "zustand/middleware";
 
 export function initState<T extends object>(state:T){
   return combine(state, (()=>({})))
