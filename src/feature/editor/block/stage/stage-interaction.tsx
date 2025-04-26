@@ -14,17 +14,18 @@ export function StageInteraction(){
       const point = playerManger.getPlayerCoordinatesByPoint({ x: e.clientX, y: e.clientY })
       if(!point) return;
       const activeDraftElements = playerManger.getElementsByCoordinates(point)
-      console.log({ activeDraftElements })
       el = playerManger.getElementDOM(activeDraftElements[0]?.id)
-      if(!el) return;
-      console.log({ el })
+    }
+    if (hoverMoveableRef.current && hoverMoveableRef.current.target !== el) {
+      hoverMoveableRef.current.target = el;
+      hoverMoveableRef.current.updateRect();
     }
   }
 
   useEffect(()=>{
     const parent = interactionRef.current?.parentElement
     if(!parent) return;
-    hoverMoveableRef.current = new Moveable(parent, { origin: false })
+    hoverMoveableRef.current = new Moveable(parent, { origin: true })
 
     return ()=>{
       hoverMoveableRef.current?.destroy()
