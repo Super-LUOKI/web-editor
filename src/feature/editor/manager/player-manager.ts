@@ -17,8 +17,16 @@ const initialState = {
 
 export class PlayerManager {
   readonly store = createStore(immer(initState(initialState)))
-  private player: DraftPlayerRef['player'] | null = null;
-  private context: DraftPlayerRef['context'] | null = null;
+  private _player: DraftPlayerRef['player'] | null = null;
+  private _context: DraftPlayerRef['context'] | null = null;
+
+  get context() {
+    return this._context
+  }
+
+  get player() {
+    return this._player
+  }
 
   constructor(private readonly draftManager: DraftManager) {
   }
@@ -57,22 +65,22 @@ export class PlayerManager {
   }
 
   setPlayer(player: DraftPlayerRef['player'] | null) {
-    if (this.player === player) return;
-    const oldPlayer = this.player;
-    this.player = player;
+    if (this._player === player) return;
+    const oldPlayer = this._player;
+    this._player = player;
     this.store.setState(state => {
       state.isPlaying = false;
       state.isBuffering = false;
     });
 
-    if (this.player) {
-      this.player.addEventListener('play', this.onPlay);
-      this.player.addEventListener('pause', this.onPause);
-      this.player.addEventListener('ended', this.onPause);
-      this.player.addEventListener('error', this.onPause);
-      this.player.addEventListener('frameupdate', this.onTimeUpdate);
-      this.player.addEventListener('waiting', this.onWaiting);
-      this.player.addEventListener('resume', this.onResume);
+    if (this._player) {
+      this._player.addEventListener('play', this.onPlay);
+      this._player.addEventListener('pause', this.onPause);
+      this._player.addEventListener('ended', this.onPause);
+      this._player.addEventListener('error', this.onPause);
+      this._player.addEventListener('frameupdate', this.onTimeUpdate);
+      this._player.addEventListener('waiting', this.onWaiting);
+      this._player.addEventListener('resume', this.onResume);
     }
     if (oldPlayer) {
       oldPlayer.removeEventListener('play', this.onPlay);
@@ -86,14 +94,14 @@ export class PlayerManager {
   }
 
   setContext(context: DraftPlayerRef['context'] | null) {
-    this.context = context
+    this._context = context
   }
 
   getPlayerCoordinatesByPoint(point: Point): Point | undefined {
     const { x: rawX, y: rawY } = point
-    const playerEl = this.player?.getContainerNode?.()?.children?.[0];
+    const playerEl = this._player?.getContainerNode?.()?.children?.[0];
     if (!playerEl) return undefined;
-    const scale = this.player?.getScale() || 1;
+    const scale = this._player?.getScale() || 1;
     const playerRect = playerEl.getBoundingClientRect();
     const clientPoint: Point = {
       x: rawX - playerRect.left,
@@ -117,7 +125,7 @@ export class PlayerManager {
 
   // todo 这个函数还需要理解，不一定准确
   isHit(coordinate: Point, element: DisplayElement) {
-    const item = this.context?.box[element.id]
+    const item = this._context?.box[element.id]
     if (!item?.ref?.current) return;
     const rect = item.ref.current.getBoundingClientRect()
     if (!rect) return false;
@@ -135,15 +143,15 @@ export class PlayerManager {
 
     return (
       p2.x <= size.width * 0.5 &&
-      p2.y <= size.height * 0.5 &&
-      p2.x >= -size.width * 0.5 &&
-      p2.y >= -size.height * 0.5
+            p2.y <= size.height * 0.5 &&
+            p2.x >= -size.width * 0.5 &&
+            p2.y >= -size.height * 0.5
     )
 
   }
 
   getElementsByCoordinates(point: Point): AllElement[] {
-    const scale = this.player?.getScale();
+    const scale = this._player?.getScale();
     const time = this.state.currentTime;
     if (!scale || time < 0) return []
 
@@ -158,10 +166,14 @@ export class PlayerManager {
 
     return elements
   }
+  
+  getElementByCoordinate(point: Point):AllElement {
+    return this.getElementsByCoordinates(point)?.[0]
+  }
 
   getElementDOM(elementId: string | undefined) {
     if (!elementId) return undefined
-    return this.context?.box[elementId]?.ref?.current
+    return this._context?.box[elementId]?.ref?.current
   }
 
 

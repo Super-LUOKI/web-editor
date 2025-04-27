@@ -14,7 +14,17 @@ export default defineConfig({
       routesDirectory: './src/route',
       generatedRouteTree: './src/generate/routeTree.gen.ts'
     }),
-    react(),
+    react({
+      babel: {
+        plugins: [
+          // other Babel plugins
+          [
+            "@locator/babel-jsx/dist",
+            { env: "development", },
+          ],
+        ],
+      },
+    }),
     tailwindcss(),
   ],
   server: { port: 5100, },

@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { DraftManagerProvider } from "@/feature/editor/block/context/draft.tsx";
 import { PlayerManagerProvider } from "@/feature/editor/block/context/player.tsx";
 import { EditorHeader } from "@/feature/editor/block/editor-header.tsx";
 import { EditorSidebar } from "@/feature/editor/block/editor-sidebar.tsx";
@@ -39,7 +40,13 @@ export function EditorPage(props: EditorPageProps){
   const [draftManager] = useState(new DraftManager(editorMockDraft))
   const [playerManager] = useState(new PlayerManager(draftManager))
 
-  return <PlayerManagerProvider value={playerManager}>
-    <Editor { ...props}/>
-  </PlayerManagerProvider>
+  return (
+    <DraftManagerProvider value={draftManager}>
+      <PlayerManagerProvider value={playerManager}>
+        <Editor { ...props}/>
+      </PlayerManagerProvider>
+    </DraftManagerProvider>
+  )
+  
+
 }

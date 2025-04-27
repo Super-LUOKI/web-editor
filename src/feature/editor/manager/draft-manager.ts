@@ -42,7 +42,7 @@ export class DraftManager{
     return this.state.draft.meta;
   }
 
-  getElement<T extends AllElementType>(id: string, type: T){
+  getElementInstance<T extends AllElementType>(id: string, type: T){
 
     const element = this.state.draft.timeline.elements[id]
     if(!element) throw new ElementNotFoundError({ id, type });
@@ -57,6 +57,15 @@ export class DraftManager{
       default:
         throw new ElementNotFoundError({ id, type })
     }
+  }
+
+  getElementData<T extends AllElementType = AllElementType>(id: string, type?: T){
+    const element = this.state.draft.timeline.elements[id]
+    if(!element) throw new ElementNotFoundError({ id, type });
+
+    if(type && element.type !== type) throw new ElementNotFoundError({ id, type });
+
+    return element;
   }
 
   updateElement(id: string, element: Partial<Omit<AllElement, "id">>){
