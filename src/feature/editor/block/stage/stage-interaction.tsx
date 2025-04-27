@@ -1,16 +1,28 @@
 import Moveable from "moveable";
 import { useEffect, useRef } from "react";
+import { useZustand } from "use-zustand";
 
-import { useDraftManager } from "@/feature/editor/block/context/draft.tsx";
-import { usePlayerManager } from "@/feature/editor/block/context/player.tsx";
 import { isHitControlBox } from "@/feature/editor/block/util/interaction.ts";
+import { useDraftManager } from "@/feature/editor/context/draft-manager.tsx";
+import { useEditorManager } from "@/feature/editor/context/editor-manager.tsx";
+import { usePlayerManager } from "@/feature/editor/context/player-manager.tsx";
+
 
 export function StageInteraction() {
+
+  const playerManger = usePlayerManager()
+  const draftManager = useDraftManager()
+  const editorManager = useEditorManager()
+
+  const selectedElementId = useZustand(editorManager.store, s => s.selectedElementId)
+  const currentTime = useZustand(playerManger.store, s => s.currentTime)
+  const isPlaying = useZustand(playerManger.store, s => s.isPlaying)
+
+
   const interactionRef = useRef<HTMLDivElement | null>(null)
   const hoverMoveableRef = useRef<Moveable | null>(null);
   const clickMoveableRef = useRef<Moveable | null>(null)
-  const playerManger = usePlayerManager()
-  const draftManager = useDraftManager()
+
 
   const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
     let el: HTMLElement | null | undefined = null
@@ -43,7 +55,7 @@ export function StageInteraction() {
     if (!clickMoveableRef.current) return
     const moveable = clickMoveableRef.current
     const domEl = playerManger.getElementDOM(elementId)
-    const draftEl = draftManager.getElementData(elementId)
+    const draftEl = draftManager.getElement(elementId)
     if (!domEl) return
     clickMoveableRef.current.target = domEl
     if (draftEl.type === 'text' ) {
@@ -93,6 +105,8 @@ export function StageInteraction() {
       return
     }
 
+    editorManager.selectElement(draftItem?.id)
+
     if (clickMoveableRef.current && clickMoveableRef.current.target !== domEl) {
       if (draftItem?.id) {
         updateClickTarget(draftItem.id);
@@ -136,6 +150,22 @@ export function StageInteraction() {
       clickMoveableRef.current?.destroy()
     }
   }, [])
+
+  useEffect(()=>{
+    if(!clickMoveableRef.current) return;
+    const selectedElement = selectedElementId ? draftManager.getElement(selectedElementId) : undefined
+    if(
+      !selectedElement || 
+        isPlaying || 
+        !playerManger.isShowInCurrentTime(selectedElement)
+    ){
+      clickMoveableRef.current.target = null;
+      clickMoveableRef.current.updateRect()
+    }else{
+      updateClickTarget(selectedElement.id)
+    }
+    
+  }, [selectedElementId, currentTime, isPlaying])
 
   return (
     <div

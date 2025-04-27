@@ -1,5 +1,5 @@
 import { StageInteraction } from "./stage-interaction";
-import { usePlayerManager } from "@/feature/editor/block/context/player.tsx";
+import { usePlayerManager } from "@/feature/editor/context/player-manager.tsx";
 import { editorMockDraft } from "@/feature/editor/util";
 import { DraftPlayer } from "@/lib/remotion/editor-render/draft-player.tsx";
 import { cn } from '@/lib/shadcn/util';

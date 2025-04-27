@@ -1,9 +1,6 @@
 import { immer } from "zustand/middleware/immer";
 import { createStore } from "zustand/vanilla";
 
-import { EditorAudioElement } from "@/feature/editor/manager/entity/editor-audio-element.ts";
-import { EditorImageElement } from "@/feature/editor/manager/entity/editor-image-element.ts";
-import { EditorTextElement } from "@/feature/editor/manager/entity/editor-text-element.ts";
 import { ElementNotFoundError } from "@/feature/editor/manager/error/element-not-found-error.ts";
 import { AllElement } from "@/lib/remotion/editor-render/schema/element.ts";
 import { RenderDraftData } from "@/lib/remotion/editor-render/schema/schema.ts";
@@ -42,24 +39,7 @@ export class DraftManager{
     return this.state.draft.meta;
   }
 
-  getElementInstance<T extends AllElementType>(id: string, type: T){
-
-    const element = this.state.draft.timeline.elements[id]
-    if(!element) throw new ElementNotFoundError({ id, type });
-    
-    switch(type){
-      case 'image':
-        return new EditorImageElement(this, id);
-      case 'text':
-        return new EditorTextElement(this, id);
-      case "audio":
-        return new EditorAudioElement(this, id);
-      default:
-        throw new ElementNotFoundError({ id, type })
-    }
-  }
-
-  getElementData<T extends AllElementType = AllElementType>(id: string, type?: T){
+  getElement<T extends AllElementType = AllElementType>(id: string, type?: T){
     const element = this.state.draft.timeline.elements[id]
     if(!element) throw new ElementNotFoundError({ id, type });
 
