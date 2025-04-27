@@ -20,6 +20,13 @@ export function StageInteraction() {
       const activeDraftElements = playerManger.getElementsByCoordinates(point)
       el = playerManger.getElementDOM(activeDraftElements[0]?.id)
     }
+    if(clickMoveableRef.current?.target === el){
+      el = null;
+    }
+
+    if(clickMoveableRef.current?.isDragging()){
+      el = null;
+    }
     if (hoverMoveableRef.current && hoverMoveableRef.current.target !== el) {
       hoverMoveableRef.current.target = el;
       hoverMoveableRef.current.updateRect();
