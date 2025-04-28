@@ -16,10 +16,14 @@ export function ImageWidget(props: ImageWidgetProps){
   return <RenderSequence element={element} premountFor={1 * fps}>
     <VisualContainer element={element}>
       <div style={{ width: '100%', height: '100%', overflow: 'hidden', position: 'relative' }}>
-        <Img src={asset.src} style={{
-          position: 'relative',
-          ...cropStyle
-        }} />
+        <Img
+          draggable={false}
+          src={asset.src}
+          style={{
+            userSelect:'none',
+            position: 'relative',
+            ...cropStyle
+          }} />
       </div>
     </VisualContainer>
   </RenderSequence>

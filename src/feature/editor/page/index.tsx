@@ -22,7 +22,7 @@ function Editor(props: EditorPageProps) {
   const { videoId } = props
   console.log('videoId', videoId)
   return (
-    <div className='size-full flex flex-row'>
+    <div className='size-full flex flex-row overflow-hidden'>
       <EditorSidebar/>
       <div className='h-full w-0 flex flex-col flex-1'>
         <EditorHeader/>

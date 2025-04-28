@@ -1,11 +1,11 @@
 import { Sequence, SequenceProps } from "remotion";
 
 import { useFrameRange } from "../hook/use-frame-range.tsx";
-import { DisplayElementSchema } from "../schema/element.ts";
+import { DisplayElement } from "../schema/element.ts";
 
 
 type RenderSequenceProps = SequenceProps & {
-    element: Pick<DisplayElementSchema, 'start' | 'length' | 'hidden'>
+    element: Pick<DisplayElement, 'start' | 'length' | 'hidden'>
 }
 
 

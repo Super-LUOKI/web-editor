@@ -1,7 +1,7 @@
 import { CSSProperties } from "react";
 
 import { SizeAsset } from "../schema/asset.ts";
-import { DisplayElementSchema } from "../schema/element.ts";
+import { DisplayElement } from "../schema/element.ts";
 
 /**
  * 计算媒体元素的剪裁（crop）样式
@@ -32,7 +32,7 @@ import { DisplayElementSchema } from "../schema/element.ts";
  *    - element的宽高应设置为 crop 的宽高，配合此样式展示才会正常
  */
 export function calcCropStyle(
-  element: Pick<DisplayElementSchema, 'crop'>,
+  element: Pick<DisplayElement, 'crop'>,
   asset: Pick<SizeAsset, 'width' | 'height'>
 ): CSSProperties {
   const style: CSSProperties = {
