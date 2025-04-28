@@ -1,13 +1,12 @@
-import { immer } from "zustand/middleware/immer";
-import { createStore } from "zustand/vanilla";
 
+
+import { StateManager } from "@/common/object/state-manager.ts";
 import { DraftManager } from "@/feature/editor/manager/draft-manager.ts";
 import { pointRotate } from "@/feature/editor/util/algorithm.ts";
 import { DraftPlayerRef } from "@/lib/remotion/editor-render/draft-player.tsx";
 import { Point } from "@/lib/remotion/editor-render/schema/common.ts";
 import { AllElement, DisplayElement } from "@/lib/remotion/editor-render/schema/element.ts";
 import { isDisplayElement, shallowWalkTracksElement } from "@/lib/remotion/editor-render/utils/draft.ts";
-import { initState } from "@/lib/zustand/util.ts";
 
 const initialState = {
   isPlaying: false,
@@ -15,10 +14,10 @@ const initialState = {
   currentTime: 0,
 }
 
-export class PlayerManager {
-  readonly store = createStore(immer(initState(initialState)))
+export class PlayerManager extends StateManager<typeof initialState>{
   private _player: DraftPlayerRef['player'] | null = null;
   private _context: DraftPlayerRef['context'] | null = null;
+  private playerEventListenerDisposers: (() => void)[] = [];
 
   get context() {
     return this._context
@@ -29,68 +28,101 @@ export class PlayerManager {
   }
 
   constructor(private readonly draftManager: DraftManager) {
+    super(initialState)
+  }
+  
+
+  play(){
+    // todo global media play manager
+    this._player?.play();
   }
 
-  get state() {
-    return this.store.getState()
+  pause(){
+    this._player?.pause();
   }
-
+  
   private onPlay() {
-    this.store.setState(state => {
+    this.setState(state => {
       state.isPlaying = true
     });
   }
 
   private onPause() {
-    this.store.setState(state => {
+    this.setState(state => {
       state.isPlaying = false
     });
   }
 
   private onWaiting() {
-    this.store.setState(state => {
+    this.setState(state => {
       state.isBuffering = true;
     });
   }
 
   private onResume() {
-    this.store.setState(state => {
+    this.setState(state => {
       state.isBuffering = false;
     });
   }
 
   private onTimeUpdate(payload: { detail: { frame: number } }) {
     const time = payload.detail.frame / this.draftManager.meta.fps;
-    this.store.setState({ currentTime: time, });
+    this.setState(state => {
+      state.currentTime = time;
+    });
   }
 
   setPlayer(player: DraftPlayerRef['player'] | null) {
     if (this._player === player) return;
-    const oldPlayer = this._player;
+    this.playerEventListenerDisposers.forEach(fn => fn())
     this._player = player;
-    this.store.setState(state => {
+    this.setState(state => {
       state.isPlaying = false;
       state.isBuffering = false;
     });
 
-    if (this._player) {
-      this._player.addEventListener('play', this.onPlay);
-      this._player.addEventListener('pause', this.onPause);
-      this._player.addEventListener('ended', this.onPause);
-      this._player.addEventListener('error', this.onPause);
-      this._player.addEventListener('frameupdate', this.onTimeUpdate);
-      this._player.addEventListener('waiting', this.onWaiting);
-      this._player.addEventListener('resume', this.onResume);
-    }
-    if (oldPlayer) {
-      oldPlayer.removeEventListener('play', this.onPlay);
-      oldPlayer.removeEventListener('pause', this.onPause);
-      oldPlayer.removeEventListener('ended', this.onPause);
-      oldPlayer.removeEventListener('error', this.onPause);
-      oldPlayer.removeEventListener('frameupdate', this.onTimeUpdate);
-      oldPlayer.removeEventListener('waiting', this.onWaiting);
-      oldPlayer.removeEventListener('resume', this.onResume);
-    }
+    if(!this._player) return;
+    const handlePlay = this.onPlay.bind(this);
+    const handlePause = this.onPause.bind(this);
+    const handleTimeUpdate = this.onTimeUpdate.bind(this);
+    const handleWaiting = this.onWaiting.bind(this);
+    const handleResume = this.onResume.bind(this);
+    
+    this._player.addEventListener('play', handlePlay);
+    this.playerEventListenerDisposers.push(()=>{
+      this._player?.removeEventListener('play', handlePlay)
+    })
+    
+    this._player.addEventListener('pause', handlePause);
+    this.playerEventListenerDisposers.push(()=>{
+      this._player?.removeEventListener('pause', handlePause)
+    })
+    
+    this._player.addEventListener('ended', handlePause);
+    this.playerEventListenerDisposers.push(()=>{
+      this._player?.removeEventListener('ended', handlePause)
+    })
+    
+    this._player.addEventListener('error', handlePause);
+    this.playerEventListenerDisposers.push(()=>{
+      this._player?.removeEventListener('error', handlePause)
+    })
+    
+    this._player.addEventListener('frameupdate', handleTimeUpdate);
+    this.playerEventListenerDisposers.push(()=>{
+      this._player?.removeEventListener('frameupdate', handleTimeUpdate)
+    })
+    
+    this._player.addEventListener('waiting', handleWaiting);
+    this.playerEventListenerDisposers.push(()=>{
+      this._player?.removeEventListener('waiting', handleWaiting)
+    })
+    
+    this._player.addEventListener('resume', handleResume);
+    this.playerEventListenerDisposers.push(()=>{
+      this._player?.removeEventListener('resume', handleResume)
+    })
+    
   }
 
   setContext(context: DraftPlayerRef['context'] | null) {
