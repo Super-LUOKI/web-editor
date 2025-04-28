@@ -310,6 +310,7 @@ export class InteractionViewController extends StateManager<typeof initialState>
   }
 
   handlePointerDown(e: PointerEvent) {
+    if(this.isPlaying) return
     if (e.button !== 0) return;
     if (!this.clickMoveable) return
     let domEl: HTMLElement | undefined | null = undefined;
