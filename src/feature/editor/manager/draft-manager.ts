@@ -2,9 +2,12 @@ import { immer } from "zustand/middleware/immer";
 import { createStore } from "zustand/vanilla";
 
 import { ElementNotFoundError } from "@/feature/editor/manager/error/element-not-found-error.ts";
-import { AllElement } from "@/lib/remotion/editor-render/schema/element.ts";
+import { ElementTypeError } from "@/feature/editor/manager/error/element-type-error.ts";
+import { getElementData } from "@/feature/editor/util/draft.ts";
+import { AllElement, DisplayElement } from "@/lib/remotion/editor-render/schema/element.ts";
 import { RenderDraftData } from "@/lib/remotion/editor-render/schema/schema.ts";
 import { AllElementType } from "@/lib/remotion/editor-render/schema/util.ts";
+import { isDisplayElement } from "@/lib/remotion/editor-render/utils/draft.ts";
 import { initState } from "@/lib/zustand/util.ts";
 
 const emptyDraft:RenderDraftData = {
@@ -48,8 +51,21 @@ export class DraftManager{
     return element;
   }
 
-  updateElement(id: string, element: Partial<Omit<AllElement, "id">>){
-    console.log("update element", id, element)
+  updateElement<T extends AllElement>(id: string, element: Partial<Omit<T, "id">>){
+    this.store.setState(state => {
+      const rawElement = getElementData(state.draft, id);
+      if(!rawElement) throw new ElementNotFoundError({ id });
+      Object.assign(rawElement, element);
+      
+    })
+  }
+
+  updateDisplayElement(id: string, element: Partial<DisplayElement>){
+    const fullElem = this.getElement(id)
+    if(!isDisplayElement(fullElem)) {
+      throw new ElementTypeError(fullElem, 'DisplayElement');
+    }
+    this.updateElement(id, element);
   }
 
   destroy(){

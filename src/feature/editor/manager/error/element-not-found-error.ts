@@ -1,11 +1,9 @@
-import { AllElement } from "@/lib/remotion/editor-render/schema/element.ts";
-import { OptionalField } from "@/type/tool";
+import { ElementFeature } from "@/feature/editor/type/error.ts";
 
-type ElementNotFoundPayload = OptionalField<Pick<AllElement, 'type' | 'id'>, 'type'>
 export class ElementNotFoundError extends Error {
-  public element: ElementNotFoundPayload;
+  public element: ElementFeature;
 
-  constructor(element: ElementNotFoundPayload) {
+  constructor(element: ElementFeature) {
     super(`Element with ID ${element.id}(${element.type ?? ''}) not found.`);
     this.name = "ElementNotFoundError";
     this.element = element;

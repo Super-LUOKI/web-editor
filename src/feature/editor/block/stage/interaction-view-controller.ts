@@ -1,3 +1,4 @@
+import lodash from 'lodash';
 import Moveable from "moveable";
 import { RefObject } from "react";
 
@@ -6,6 +7,8 @@ import { isHitControlBox } from "@/feature/editor/block/util/interaction.ts";
 import { DraftManager } from "@/feature/editor/manager/draft-manager.ts";
 import { EditorManager } from "@/feature/editor/manager/editor-manager.ts";
 import { PlayerManager } from "@/feature/editor/manager/player-manager.ts";
+import { isDisplayElement } from "@/lib/remotion/editor-render/utils/draft.ts";
+import { observeElementSize } from "@/util/dom.ts";
 
 type InitOptions = {
     interactionDomRef: RefObject<HTMLDivElement | null>
@@ -32,7 +35,8 @@ export class InteractionViewController extends StateManager<typeof initialState>
       this.editorManager.store.subscribe((state, prevState) => {
         if(state.selectedElementId === prevState.selectedElementId) return
         this.selectedElementId = state.selectedElementId
-        this.updateByStateChange()
+        this.updateClickMoveableByState()
+        this.refreshMoveableListeners()
       })
     )
 
@@ -40,7 +44,7 @@ export class InteractionViewController extends StateManager<typeof initialState>
       this.playerManager.store.subscribe((state) => {
         if(state.isPlaying === this.isPlaying) return
         this.isPlaying = state.isPlaying
-        this.updateByStateChange()
+        this.updateClickMoveableByState()
       })
     )
   }
@@ -88,6 +92,8 @@ export class InteractionViewController extends StateManager<typeof initialState>
       interactionDom.removeEventListener('pointerdown', pointerDownEventListener)
     });
 
+    this.disposers.push(observeElementSize(interactionDom, this.updateMoveableByElementSize.bind(this)))
+
 
   }
   
@@ -114,7 +120,7 @@ export class InteractionViewController extends StateManager<typeof initialState>
     moveable.updateRect();
   }
   
-  updateByStateChange(){
+  updateClickMoveableByState(){
     if(!this.clickMoveable) return;
     const selectedElement = this.selectedElementId ? this.draftManager.getElement(this.selectedElementId) : undefined
     if (
@@ -127,6 +133,108 @@ export class InteractionViewController extends StateManager<typeof initialState>
     } else {
       this.updateClickTarget(selectedElement.id)
     }
+  }
+
+  updateMoveableByElementSize(){
+    // wait for the dom update
+    setTimeout(() => {
+      this.hoverMoveable?.updateRect();
+      this.clickMoveable?.updateRect();
+    }, 50)
+
+  }
+
+  refreshMoveableListeners(){
+    const clickMoveable = this.clickMoveable
+    const selectedElementId = this.selectedElementId
+    if (!selectedElementId || !clickMoveable) return;
+    clickMoveable.off();
+
+    const getInitialDiff = () => {
+      return {
+        x: 0,
+        y: 0,
+        rotate: 0,
+        scaleX: 1,
+        scaleY: 1,
+        width: 0,
+        height: 0,
+      };
+    };
+    
+    const startData = { transform: '', width: 0, height: 0 };
+    let diff = getInitialDiff()
+    
+    const handleStart = () => {
+      const target = clickMoveable.target as HTMLElement | undefined;
+      if(!target) return
+
+      // collect init data
+      const rect = clickMoveable.getRect()
+      startData.width = rect.offsetWidth;
+      startData.height = rect.offsetHeight
+      startData.transform = target.style.transform
+
+      // init diff data
+      diff = getInitialDiff()
+    }
+
+    const handleEnd = ()=>{
+      // collect final data
+
+      if(lodash.isEqual(diff, getInitialDiff())) return;
+      const draftEl = this.draftManager.getElement(selectedElementId)
+      if(!draftEl || !isDisplayElement(draftEl)) return;
+      
+      const data = {
+        x: draftEl.x,
+        y: draftEl.y,
+        width: draftEl.width,
+        height: draftEl.height,
+        rotate: draftEl.rotate,
+        scaleX: draftEl.scaleX,
+        scaleY: draftEl.scaleY,
+      }
+
+      if(clickMoveable.resizable && Array.isArray(clickMoveable.renderDirections)){
+        const renderDirections = clickMoveable.renderDirections
+        if((renderDirections.includes('w') ||  renderDirections.includes('e'))
+        ){
+          data.width = (data.width || startData.width) + diff.width
+        }
+
+        if((renderDirections.includes('n') ||  renderDirections.includes('s'))
+        ){
+          data.height = (data.height || startData.height) + diff.height
+        }
+      }
+
+      data.x += diff.x;
+      data.y += diff.y;
+      data.rotate += diff.rotate;
+      data.scaleX *= diff.scaleX;
+      data.scaleY *= diff.scaleY;
+
+      this.draftManager.updateDisplayElement(draftEl.id, data)
+
+
+      // reset diff data
+      diff = getInitialDiff()
+
+    }
+
+    clickMoveable
+      .on('dragStart', handleStart)
+      .on('rotateStart', handleStart)
+      .on('resizeStart', handleStart)
+      .on('scaleStart', handleStart)
+
+      .on('dragEnd', handleEnd)
+      .on('rotateEnd', handleEnd)
+      .on('resizeEnd', handleEnd)
+      .on('scaleEnd', handleEnd);
+  
+
   }
 
   handlePointerMove(e: PointerEvent){

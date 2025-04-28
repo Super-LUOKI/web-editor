@@ -27,19 +27,7 @@ export function StageInteraction() {
     return () => {
       vc.destroy()
     }
-    
   }, [])
-
-  // useEffect(() => {
-  //   const moveable = clickMoveableRef.current
-  //   if (!selectedElementId || !moveable) return;
-  //
-  //
-  //   return () => {
-  //     moveable.off()
-  //   }
-  //
-  // }, [selectedElementId])
 
 
   return (

@@ -32,10 +32,10 @@ export const DisplayElementSchema = BaseElementSchema.extend({
    * do not modify it, it will be be automatically generated.
    */
   height: z.number().optional(),
-  scaleX: z.number().optional(),
-  scaleY: z.number().optional(),
+  scaleX: z.number(),
+  scaleY: z.number(),
   /** right rotate is positive */
-  rotate: z.number().optional(),
+  rotate: z.number(),
 
   crop: RectSchema.optional(),
   /**
