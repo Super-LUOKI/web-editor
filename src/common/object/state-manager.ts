@@ -16,3 +16,7 @@ export class StateManager<T extends object> {
     this.store.setState(produce(this.state, updater));
   }
 }
+
+
+// 返回StateManager.state的类型
+export type StateType<T extends StateManager<any>> = T extends StateManager<infer S> ? S : never;

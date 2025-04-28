@@ -31,26 +31,20 @@ export class InteractionViewController extends StateManager<typeof initialState>
         private readonly editorManager: EditorManager
   ) {
     super(initialState);
-    this.disposers.push(
-      this.editorManager.store.subscribe((state, prevState) => {
-        if(state.selectedElementId === prevState.selectedElementId) return
-        this.selectedElementId = state.selectedElementId
-        this.updateClickMoveableByState()
-        this.refreshMoveableListeners()
-      })
-    )
-
-    this.disposers.push(
-      this.playerManager.store.subscribe((state) => {
-        if(state.isPlaying === this.isPlaying) return
-        this.isPlaying = state.isPlaying
-        this.updateClickMoveableByState()
-      })
-    )
   }
 
   init(options: InitOptions) {
     const { interactionDomRef } = options
+
+
+    this.disposers.push(
+      this.editorManager.store.subscribe(this.handleEditorManagerStoreChange.bind(this))
+    )
+
+    this.disposers.push(
+      this.playerManager.store.subscribe(this.handlePlayerManagerStoreChange.bind(this))
+    )
+
     const interactionDom = interactionDomRef.current
     const parent = interactionDomRef.current?.parentElement
     if (!interactionDom || !parent) return
@@ -93,11 +87,20 @@ export class InteractionViewController extends StateManager<typeof initialState>
     });
 
     this.disposers.push(observeElementSize(interactionDom, this.updateMoveableByElementSize.bind(this)))
-
-
   }
   
+  private handleEditorManagerStoreChange(state: typeof this.editorManager.state, prevState: typeof this.editorManager.state){
+    if(state.selectedElementId === prevState.selectedElementId) return
+    this.selectedElementId = state.selectedElementId
+    this.updateClickMoveableByState()
+    this.refreshMoveableListeners()
+  }
   
+  private handlePlayerManagerStoreChange(state: typeof this.playerManager.state, prevState: typeof this.playerManager.state){
+    if(state.isPlaying === prevState.isPlaying) return
+    this.isPlaying = state.isPlaying
+    this.updateClickMoveableByState()
+  }
 
   updateClickTarget(elementId: string){
     if (!this.clickMoveable) return
@@ -148,6 +151,7 @@ export class InteractionViewController extends StateManager<typeof initialState>
     const clickMoveable = this.clickMoveable
     const selectedElementId = this.selectedElementId
     if (!selectedElementId || !clickMoveable) return;
+    // 清空之前的事件监听
     clickMoveable.off();
 
     const getInitialDiff = () => {
@@ -179,9 +183,29 @@ export class InteractionViewController extends StateManager<typeof initialState>
       diff = getInitialDiff()
     }
 
+    // 纯ui改动，目的在于实时看到效果，并不会改动draft
+    const handleUpdate = ()=>{
+      const target = clickMoveable.target as HTMLElement | undefined;
+      if(!target) return
+      const [t1, t2] = startData.transform.split(' scale');
+      // 这里最后有多个scale（不断更新的情况下可能出现很多），但是并不会让draft的scale变成多个，因为draft的scale计算不依赖这个（单独属性计算），这里只是浏览器显示用
+      target.style.transform = `translate(${diff.x}px, ${diff.y}px) ${t1} rotate(${diff.rotate}deg) scale${t2} scale(${diff.scaleX},${diff.scaleY})`;
+      if(clickMoveable.resizable && Array.isArray(clickMoveable.renderDirections)){
+        const renderDirections = clickMoveable.renderDirections
+        if((renderDirections.includes('w') ||  renderDirections.includes('e'))
+        ){
+          target.style.width = `${startData.width + diff.width}px`
+        }
+
+        if((renderDirections.includes('n') ||  renderDirections.includes('s'))
+        ){
+          target.style.height = `${startData.height + diff.height}px`
+        }
+      }
+    }
+
     const handleEnd = ()=>{
       // collect final data
-
       if(lodash.isEqual(diff, getInitialDiff())) return;
       const draftEl = this.draftManager.getElement(selectedElementId)
       if(!draftEl || !isDisplayElement(draftEl)) return;
@@ -233,6 +257,33 @@ export class InteractionViewController extends StateManager<typeof initialState>
       .on('rotateEnd', handleEnd)
       .on('resizeEnd', handleEnd)
       .on('scaleEnd', handleEnd);
+
+
+    // ui update
+    clickMoveable.on('drag', data => {
+      diff.x += data.delta[0]
+      diff.y += data.delta[1]
+      handleUpdate()
+    });
+    clickMoveable.on('rotate', data => {
+      diff.rotate += data.delta;
+      handleUpdate()
+    })
+    clickMoveable.on('scale', data => {
+      diff.scaleX *= data.delta[0]
+      diff.scaleY *= data.delta[1]
+      diff.x += data.drag.delta[0]
+      diff.y += data.drag.delta[1]
+      handleUpdate()
+    })
+    
+    clickMoveable.on('resize', data => {
+      diff.width += data.delta[0]
+      diff.height += data.delta[1]
+      diff.x= data.drag.delta[0]
+      diff.y= data.drag.delta[1]
+      handleUpdate()
+    })
   
 
   }
@@ -313,14 +364,10 @@ export class InteractionViewController extends StateManager<typeof initialState>
     this.hoverMoveable.target = null;
     this.hoverMoveable.updateRect()
   }
-    
-    
-
 
   destroy(): void {
     this.disposers.forEach(dispose => dispose())
     this.disposers = []
-      
     this.hoverMoveable?.destroy()
     this.clickMoveable?.destroy()
     this.hoverMoveable = undefined

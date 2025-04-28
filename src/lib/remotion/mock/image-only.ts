@@ -1,6 +1,7 @@
 import { RenderDraftData } from "../editor-render/schema/schema";
 
 export const ImageOnlyDraft1: RenderDraftData = {
+  background: 'black',
   timeline: {
     assets: {
       test_image_1: {

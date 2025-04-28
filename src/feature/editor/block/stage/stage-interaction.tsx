@@ -24,6 +24,7 @@ export function StageInteraction() {
 
   useEffect(()=>{
     vc.init({ interactionDomRef: interactionRef });
+
     return () => {
       vc.destroy()
     }
