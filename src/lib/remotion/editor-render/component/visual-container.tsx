@@ -3,11 +3,11 @@ import { useCurrentFrame, useVideoConfig } from "remotion";
 
 import { AnimationFactory } from "../animation/animation-factory.ts";
 import { useRegisterBox } from "../render-context.tsx";
-import { DisplayElementSchema } from "../schema/element.ts";
+import { DisplayElement } from "../schema/element.ts";
 import { getAttributeWithOverwrite } from "../utils/draft.ts";
 
 type VisualContainerProps = PropsWithChildren<{
-    element: DisplayElementSchema
+    element: DisplayElement
 }>
 
 export function VisualContainer(props: VisualContainerProps) {

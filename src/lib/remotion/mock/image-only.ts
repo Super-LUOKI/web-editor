@@ -6,9 +6,9 @@ export const ImageOnlyDraft1: RenderDraftData = {
       test_image_1: {
         id: 'test_image_1',
         type: 'image',
-        src: 'https://haowallpaper.com/link/common/file/previewFileImg/16449373166816640',
+        src: 'https://haowallpaper.com/link/common/file/previewFileImg/16773548007017856',
         width: 1100,
-        height: 826
+        height: 621
       },
     },
     elements: {
@@ -18,13 +18,13 @@ export const ImageOnlyDraft1: RenderDraftData = {
         assetId: 'test_image_1',
         start: 0,
         length: 2,
-        width: 600,
-        height: 400,
+        width: 1100,
+        height: 621,
         crop: {
-          x: 100,
+          x: 200,
           y: 100,
-          width: 600,
-          height: 400,
+          width: 900,
+          height: 521,
         },
         x: -200,
         y: -200,
