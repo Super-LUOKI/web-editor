@@ -22,7 +22,6 @@ function getMatchedRulerSection(pixelPerSecond: number): RulerSection {
   const section = rulerSections.find(item => {
     return item.duration * pixelPerSecond > minDisplayedPixelWidth
   })
-  console.log('find', section)
   return section ? section : rulerSections.at(-1) as RulerSection
 }
 
