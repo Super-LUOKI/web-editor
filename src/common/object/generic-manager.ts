@@ -1,10 +1,14 @@
 import { StateManager } from "@/common/object/state-manager.ts";
 
-export class GenericManager<T extends object> extends StateManager<T>{
+export abstract class GenericManager<State extends object,
+    InitOptions = void
+> extends StateManager<State>{
   protected disposers: (() => void)[] = [];
-  private readonly _initialState: T;
+  private readonly _initialState: State;
+  private lifeCycleTasks: (() => Promise<void>)[] = [];
+  private isExecutingLifeCycleTasks = false;
 
-  constructor(initialState: T){
+  protected constructor(initialState: State){
     super(initialState)
     this._initialState = initialState
   }
@@ -12,9 +16,39 @@ export class GenericManager<T extends object> extends StateManager<T>{
   protected addDisposers(...disposers: (() => void)[]){
     this.disposers.push(...disposers);
   }
-  
-  destroy(){
+
+  protected clearDisposers(){
     this.disposers.forEach((dispose) => dispose());
-    this.store.setState(this._initialState);
+    this.disposers = [];
+  }
+  
+  private async flushLifeCycleTasks(){
+    if(this.isExecutingLifeCycleTasks) return
+    while(true){
+      const task = this.lifeCycleTasks.shift();
+      if(!task) {
+        this.isExecutingLifeCycleTasks = false;
+        break;
+      }
+      await task();
+    }
+  }
+
+  abstract onInit(options: InitOptions):void | Promise<void>;
+
+  onDestroy():void | Promise<void>{}
+
+  init(options: InitOptions){
+    this.lifeCycleTasks.push(async()=>this.onInit(options))
+    this.flushLifeCycleTasks()
+  }
+  
+  async destroy(){
+    this.lifeCycleTasks.push(async()=>{
+      this.clearDisposers()
+      this.store.setState(this._initialState);
+      await this.onDestroy()
+    })
+    this.flushLifeCycleTasks()
   }
 }

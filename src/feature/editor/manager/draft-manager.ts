@@ -3,11 +3,15 @@ import lodash from "lodash";
 import { GenericManager } from "@/common/object/generic-manager.ts";
 import { ElementNotFoundError } from "@/feature/editor/manager/error/element-not-found-error.ts";
 import { ElementTypeError } from "@/feature/editor/manager/error/element-type-error.ts";
+import { editorMockDraft } from "@/feature/editor/util";
 import { getElementData } from "@/feature/editor/util/draft.ts";
 import { AllElement, DisplayElement } from "@/lib/remotion/editor-render/schema/element.ts";
 import { RenderDraftData } from "@/lib/remotion/editor-render/schema/schema.ts";
 import { AllElementType } from "@/lib/remotion/editor-render/schema/util.ts";
 import { calculateDraftDuration, isDisplayElement } from "@/lib/remotion/editor-render/utils/draft.ts";
+type InitOptions = {
+    videoId: string;
+}
 
 const emptyDraft:RenderDraftData = {
   timeline: { elements: {}, assets: {}, tracks: [], fonts: [] },
@@ -15,12 +19,9 @@ const emptyDraft:RenderDraftData = {
     
 }
 
-type InitOptions = {
-  draft: RenderDraftData
-}
 const initialState = { draft: emptyDraft, duration: 0 }
 
-export class DraftManager extends GenericManager<typeof initialState>{
+export class DraftManager extends GenericManager<typeof initialState, InitOptions>{
 
   constructor(){
     super(initialState)
@@ -60,8 +61,13 @@ export class DraftManager extends GenericManager<typeof initialState>{
     this.updateElement(id, element);
   }
 
-  init(options: InitOptions){
-    const { draft } = options;
+  async getDraftData(videoId: string){
+    console.log('mock draft data', videoId)
+    return editorMockDraft
+  }
+
+  async onInit(options: InitOptions){
+    const { videoId } = options
     this.addDisposers(
       this.store.subscribe(lodash.debounce((state: typeof initialState) => {
         this.setState(storeState => {
@@ -69,8 +75,19 @@ export class DraftManager extends GenericManager<typeof initialState>{
         })
       }, 200))
     )
+
+    const draftData = await this.getDraftData(videoId);
+    this.setDraft(draftData)
+    
+  }
+
+  onDestroy(): void | Promise<void> {
+    return super.onDestroy();
+  }
+
+  setDraft(draft: RenderDraftData){
     this.setState(state => {
-      state.draft = draft
+      state.draft = draft;
     })
   }
 }

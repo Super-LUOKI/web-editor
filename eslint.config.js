@@ -36,7 +36,8 @@ export default tseslint.config({ ignores: ['dist'] }, {
       unnecessary: true,
       numbers: false
     }],
-    '@typescript-eslint/no-explicit-any': "off"
+    '@typescript-eslint/no-explicit-any': "off",
+    '@typescript-eslint/no-unused-vars':'off'
   },
 }, {
   extends: [js.configs.recommended, ...tseslint.configs.recommended],

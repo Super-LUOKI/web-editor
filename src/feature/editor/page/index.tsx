@@ -12,15 +12,12 @@ import { PlayerManagerProvider } from "@/feature/editor/context/player-manager.t
 import { DraftManager } from "@/feature/editor/manager/draft-manager.ts";
 import { EditorManager } from "@/feature/editor/manager/editor-manager.ts";
 import { PlayerManager } from "@/feature/editor/manager/player-manager.ts";
-import { editorMockDraft } from "@/feature/editor/util";
 
 type EditorPageProps = {
     videoId?: string
 }
 
-function Editor(props: EditorPageProps) {
-  const { videoId } = props
-  console.log('videoId', videoId)
+function Editor() {
   return (
     <div className='size-full flex flex-row overflow-hidden'>
       <EditorSidebar/>
@@ -39,13 +36,13 @@ function Editor(props: EditorPageProps) {
 }
 
 export function EditorPage(props: EditorPageProps){
+  const { videoId } = props
   const [draftManager] = useState(new DraftManager())
   const [editorManager] = useState(new EditorManager())
   const [playerManager] = useState(new PlayerManager(draftManager))
     
   useEffect(()=>{
-    draftManager.init({ draft: editorMockDraft })
-
+    draftManager.init({ videoId: videoId || '' })
     return ()=>{
       draftManager.destroy()
     }
@@ -55,7 +52,7 @@ export function EditorPage(props: EditorPageProps){
     <DraftManagerProvider value={draftManager}>
       <PlayerManagerProvider value={playerManager}>
         <EditorManagerProvider value={editorManager}>
-          <Editor { ...props}/>
+          <Editor/>
         </EditorManagerProvider>
       </PlayerManagerProvider>
     </DraftManagerProvider>
