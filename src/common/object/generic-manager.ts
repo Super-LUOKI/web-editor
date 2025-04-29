@@ -1,7 +1,7 @@
 import { StateManager } from "@/common/object/state-manager.ts";
 
 export abstract class GenericManager<State extends object,
-    InitOptions = void
+    InitOptions = any
 > extends StateManager<State>{
   protected disposers: (() => void)[] = [];
   private readonly _initialState: State;
