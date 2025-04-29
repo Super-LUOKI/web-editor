@@ -7,9 +7,9 @@ import { TimelineViewControllerProvider } from "@/feature/editor/context/timelin
 
 export function TimelineContent() {
   return (
-    <div className='w-full border-t-[1px] border-t-gray-100 overflow-x-scroll'>
+    <div className='w-full border-t-[1px] border-t-gray-100 '>
       <TimelineAction/>
-      <div>
+      <div className='w-full overflow-x-scroll'>
         <TimeRuler/>
         <div>All Timelines</div>
       </div>

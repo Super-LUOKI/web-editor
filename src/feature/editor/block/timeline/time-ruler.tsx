@@ -16,6 +16,6 @@ export function TimeRuler() {
         height: 16,
         background:'red'
       }}
-    >Time</div>
+    ></div>
   )
 }
