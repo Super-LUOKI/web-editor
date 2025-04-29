@@ -43,7 +43,7 @@ export abstract class GenericManager<State extends object,
     this.flushLifeCycleTasks()
   }
   
-  async destroy(){
+  destroy(){
     this.lifeCycleTasks.push(async()=>{
       this.clearDisposers()
       this.store.setState(this._initialState);
