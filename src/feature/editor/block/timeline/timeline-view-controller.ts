@@ -1,9 +1,11 @@
 import { GenericManager } from "@/common/object/generic-manager.ts";
 
-const initialState = { pixelPerSecond: 10, maxDuration: 5 * 60 }
+type InitOptions = {
+  tes: string
+}
+const initialState = { pixelPerSecond: 300, maxDuration: 5 * 60 }
 
-export class TimelineViewController extends GenericManager<typeof initialState> {
-
+export class TimelineViewController extends GenericManager<typeof initialState, InitOptions> {
 
   constructor() {
     super(initialState)
@@ -13,10 +15,12 @@ export class TimelineViewController extends GenericManager<typeof initialState> 
   onInit(): void | Promise<void> {
 
   }
-
+  
+  onDestroy(): void | Promise<void> {
+    return super.onDestroy();
+  }
 
   updatePixelPerSecond(pixel: number) {
-    console.log({ pixel })
     this.setState(state => {
       state.pixelPerSecond = pixel
     })

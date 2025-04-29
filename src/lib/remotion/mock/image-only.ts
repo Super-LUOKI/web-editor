@@ -7,9 +7,9 @@ export const ImageOnlyDraft1: RenderDraftData = {
       test_image_1: {
         id: 'test_image_1',
         type: 'image',
-        src: 'https://haowallpaper.com/link/common/file/previewFileImg/16773548007017856',
+        src: 'https://haowallpaper.com/link/common/file/previewFileImg/15618353851830592',
         width: 1100,
-        height: 621
+        height: 703
       },
     },
     elements: {
@@ -20,7 +20,7 @@ export const ImageOnlyDraft1: RenderDraftData = {
         start: 0,
         length: 2,
         width: 1100,
-        height: 621,
+        height: 703,
         crop: {
           x: 200,
           y: 100,

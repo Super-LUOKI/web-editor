@@ -1,9 +1,9 @@
-import { useState } from "react";
+import {  useState } from "react";
 
 import { TimeRuler } from "@/feature/editor/block/timeline/time-ruler.tsx";
 import { TimelineAction } from "@/feature/editor/block/timeline/timeline-action.tsx";
 import { TimelineViewController } from "@/feature/editor/block/timeline/timeline-view-controller.ts";
-import { TimelineViewControllerProvider } from "@/feature/editor/context/timeline-view-controller.tsx";
+import { TimelineViewControllerProvider, } from "@/feature/editor/context/timeline-view-controller.tsx";
 
 export function TimelineContent() {
   return (

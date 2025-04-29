@@ -1,4 +1,5 @@
-import { useRef } from "react";
+import lodash from "lodash";
+import { useCallback, useRef } from "react";
 import { useZustand } from "use-zustand";
 
 import { formatSeconds } from "@/common/util/date.ts";
@@ -26,32 +27,35 @@ export function TimelineAction(props: TimelineActionProps) {
   const currentTime = useZustand(playerManager.store, s => s.currentTime)
   const duration = useZustand(draftManager.store, s => s.duration);
   const pixelPerSecond = useZustand(vc.store, s => s.pixelPerSecond)
-    
+
   const containerRef = useRef<HTMLDivElement | null>(null)
   const { width: containerWidth } = useSize(containerRef)
-    
-  const renderPlayIcon = ()=>{
-    let icon = <IconPark icon='play' size={20}/>  
-    
-    if(isBuffering) icon = <IconPark icon='loading' size={20} spin/>
-    if(isPlaying) icon = <IconPark icon='pause' size={20}/>
-      
+
+  const throttleUpdatePixelPerSecond = useCallback(lodash.throttle(vc.updatePixelPerSecond.bind(vc), 200), [])
+
+  const renderPlayIcon = () => {
+    let icon = <IconPark icon='play' size={20}/>
+
+    if (isBuffering) icon = <IconPark icon='loading' size={20} spin/>
+    if (isPlaying) icon = <IconPark icon='pause' size={20}/>
+
     return icon
   }
-    
+
+
   return (
     <div
       ref={containerRef}
       className={cn('w-full h-[48px] border-b-[1px] border-b-gray-100 flex justify-between items-center px-3', className)}>
       <div>Left Actions</div>
       <div className='flex items-center gap-2'>
-        <Button 
+        <Button
           variant='outline'
-          onClick={()=>{
-            if(isBuffering) return
-            if(isPlaying){
+          onClick={() => {
+            if (isBuffering) return
+            if (isPlaying) {
               playerManager.pause()
-            }else{
+            } else {
               playerManager.play()
             }
           }}>{renderPlayIcon()}</Button>
@@ -62,9 +66,10 @@ export function TimelineAction(props: TimelineActionProps) {
         </div>
       </div>
       <div className='flex items-center w-[150px]'>
-        <Slider defaultValue={[pixelPerSecond]} min={containerWidth / duration} max={5 * containerWidth / duration} onValueChange={([relativePixel])=>{
-          vc.updatePixelPerSecond(relativePixel)
-        }} />
+        <Slider defaultValue={[pixelPerSecond]} min={containerWidth / duration}
+          max={5 * containerWidth / duration} onValueChange={([relativePixel]) => {
+            throttleUpdatePixelPerSecond(relativePixel)
+          }}/>
       </div>
     </div>
   )
