@@ -1,14 +1,13 @@
-import { immer } from "zustand/middleware/immer";
-import { createStore } from "zustand/vanilla";
+import lodash from "lodash";
 
+import { GenericManager } from "@/common/object/generic-manager.ts";
 import { ElementNotFoundError } from "@/feature/editor/manager/error/element-not-found-error.ts";
 import { ElementTypeError } from "@/feature/editor/manager/error/element-type-error.ts";
 import { getElementData } from "@/feature/editor/util/draft.ts";
 import { AllElement, DisplayElement } from "@/lib/remotion/editor-render/schema/element.ts";
 import { RenderDraftData } from "@/lib/remotion/editor-render/schema/schema.ts";
 import { AllElementType } from "@/lib/remotion/editor-render/schema/util.ts";
-import { isDisplayElement } from "@/lib/remotion/editor-render/utils/draft.ts";
-import { initState } from "@/lib/zustand/util.ts";
+import { calculateDraftDuration, isDisplayElement } from "@/lib/remotion/editor-render/utils/draft.ts";
 
 const emptyDraft:RenderDraftData = {
   timeline: { elements: {}, assets: {}, tracks: [], fonts: [] },
@@ -16,22 +15,15 @@ const emptyDraft:RenderDraftData = {
     
 }
 
-const initialState = { draft: emptyDraft }
+type InitOptions = {
+  draft: RenderDraftData
+}
+const initialState = { draft: emptyDraft, duration: 0 }
 
-export class DraftManager{
-  readonly store = createStore(immer(initState(initialState)))
-  private disposers: (() => void)[] = [];
+export class DraftManager extends GenericManager<typeof initialState>{
 
-  constructor(
-    draft: RenderDraftData
-  ){
-    this.store.setState((state) => {
-      state.draft = draft;
-    });
-  }
-
-  get state(){
-    return this.store.getState();
+  constructor(){
+    super(initialState)
   }
 
   get timeline(){
@@ -52,7 +44,7 @@ export class DraftManager{
   }
 
   updateElement<T extends AllElement>(id: string, element: Partial<Omit<T, "id">>){
-    this.store.setState(state => {
+    this.setState(state => {
       const rawElement = getElementData(state.draft, id);
       if(!rawElement) throw new ElementNotFoundError({ id });
       Object.assign(rawElement, element);
@@ -68,8 +60,17 @@ export class DraftManager{
     this.updateElement(id, element);
   }
 
-  destroy(){
-    this.disposers.forEach((dispose) => dispose());
-    this.store.setState(initState)
+  init(options: InitOptions){
+    const { draft } = options;
+    this.addDisposers(
+      this.store.subscribe(lodash.debounce((state: typeof initialState) => {
+        this.setState(storeState => {
+          storeState.duration = calculateDraftDuration(state.draft)
+        })
+      }, 200))
+    )
+    this.setState(state => {
+      state.draft = draft
+    })
   }
 }

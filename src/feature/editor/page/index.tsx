@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { EditorHeader } from "@/feature/editor/block/editor-header.tsx";
 import { EditorSidebar } from "@/feature/editor/block/editor-sidebar.tsx";
@@ -39,10 +39,17 @@ function Editor(props: EditorPageProps) {
 }
 
 export function EditorPage(props: EditorPageProps){
-  const [draftManager] = useState(new DraftManager(editorMockDraft))
+  const [draftManager] = useState(new DraftManager())
   const [editorManager] = useState(new EditorManager())
   const [playerManager] = useState(new PlayerManager(draftManager))
     
+  useEffect(()=>{
+    draftManager.init({ draft: editorMockDraft })
+
+    return ()=>{
+      draftManager.destroy()
+    }
+  }, [])
 
   return (
     <DraftManagerProvider value={draftManager}>

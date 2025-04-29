@@ -17,7 +17,7 @@ export function Stage(props: StageProps) {
   const draft = useZustand(draftManager.store, s => s.draft)
     
   return (
-    <div className={cn('p-2 flex flex-center relative', className)}>
+    <div className={cn('p-2 flex flex-center relative overflow-hidden', className)}>
       <DraftPlayer 
         ref={draftPlayer => {
           if(!draftPlayer) return;
