@@ -32,7 +32,7 @@ export function TimelineAction(props: TimelineActionProps) {
   const { width: containerWidth } = useSize(containerRef)
 
   const throttleUpdatePixelPerSecond = useCallback(
-    lodash.throttle(vc.updatePixelPerSecond.bind(vc), 200),
+    lodash.throttle(vc.updatePixelPerSecond.bind(vc), 100),
     []
   )
 

@@ -32,7 +32,7 @@ export function TimelineTrack(props: TimelineTrackProps) {
     return
   }
   return (
-    <div className={cn('w-full h-[34px] border-b-[1px] border-dashed border-gray-200 relative')}>
+    <div className={cn('w-full h-[38px] border-b-[1px] border-dashed border-gray-200 relative')}>
       <div
         className={cn(
           'absolute left-0 top-0 -translate-x-full bg-gray-200 h-full rounded-md flex justify-center items-center',
@@ -42,19 +42,20 @@ export function TimelineTrack(props: TimelineTrackProps) {
       >
         {trackTitleMap[track.type]}
       </div>
-      <div className="w-full h-full relative">
+      <div className="w-full h-full relative flex items-center">
         {track.clips.map(clip => {
           const el = getElementData(draftManager.draft, clip.elementId)
           if (!el) return null
           const { start, length } = el
-          console.log({ start, length })
           return (
             <TimelineTrackClip
-              className="absolute top-0"
+              className={cn('absolute')}
               clip={clip}
               style={{
                 left: `${start * pixelPerSecond}px`,
-                width: `${length * pixelPerSecond - HEADER_WIDTH}px`,
+                top: 2,
+                width: `${length * pixelPerSecond}px`,
+                height: 'calc(100% - 4px)',
               }}
             />
           )
