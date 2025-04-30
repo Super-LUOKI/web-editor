@@ -43,12 +43,13 @@ export function TimelineTrack(props: TimelineTrackProps) {
         {trackTitleMap[track.type]}
       </div>
       <div className="w-full h-full relative flex items-center">
-        {track.clips.map(clip => {
+        {track.clips.map((clip, index) => {
           const el = getElementData(draftManager.draft, clip.elementId)
           if (!el) return null
           const { start, length } = el
           return (
             <TimelineTrackClip
+              key={index}
               className={cn('absolute')}
               clip={clip}
               style={{

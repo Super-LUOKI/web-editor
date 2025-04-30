@@ -2,7 +2,9 @@ import { Fragment, PropsWithChildren } from 'react'
 import { useZustand } from 'use-zustand'
 
 import { useDraftManager } from '@/feature/editor/context/draft-manager.tsx'
+import { usePlayerManager } from '@/feature/editor/context/player-manager.tsx'
 import { useTimelineViewController } from '@/feature/editor/context/timeline-view-controller.tsx'
+import { cn } from '@/lib/shadcn/util.ts'
 
 type RulerSection = { duration: number; count: number }
 const rulerSections: RulerSection[] = [
@@ -25,8 +27,10 @@ function getMatchedRulerSection(pixelPerSecond: number): RulerSection {
   return section ? section : (rulerSections.at(-1) as RulerSection)
 }
 
-export function TimeRuler(props: PropsWithChildren) {
+export function TimeRuler(props: PropsWithChildren<{ className?: string }>) {
+  const { className, children } = props
   const draftManager = useDraftManager()
+  const playerManager = usePlayerManager()
   const vc = useTimelineViewController()
 
   const pixelPerSecond = useZustand(vc.store, s => s.pixelPerSecond)
@@ -38,8 +42,18 @@ export function TimeRuler(props: PropsWithChildren) {
   const section = getMatchedRulerSection(pixelPerSecond)
 
   return (
-    <div style={{ width: `${maxDisplayDuration * pixelPerSecond}px` }}>
-      <div className="relative bg-gray-100 text-xs text-gray-800 flex items-center select-none h-[15px]">
+    <div
+      ref={vc.setTimelineContentDomContainer.bind(vc)}
+      className={cn('relative', className)}
+      style={{ width: `${maxDisplayDuration * pixelPerSecond}px` }}
+    >
+      <div
+        className="relative bg-gray-100 text-xs text-gray-800 flex items-center select-none h-[15px]"
+        onPointerDown={e => {
+          const offsetX = e.clientX - e.currentTarget.getBoundingClientRect().left
+          playerManager.seekTo(offsetX / pixelPerSecond)
+        }}
+      >
         {Array(Math.ceil(maxDisplayDuration / section.duration))
           .fill(null)
           .map((_, mainIndex) => {
@@ -72,7 +86,7 @@ export function TimeRuler(props: PropsWithChildren) {
             )
           })}
       </div>
-      {props.children}
+      {children}
     </div>
   )
 }

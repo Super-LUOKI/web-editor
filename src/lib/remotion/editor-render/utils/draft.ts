@@ -36,6 +36,17 @@ export function calculateDraftDuration(draft: RenderDraftData) {
   return duration
 }
 
+export function calculateDraftDurationInFrames(draft: RenderDraftData) {
+  const durationInSeconds = calculateDraftDuration(draft)
+  const fps = draft.meta.fps
+  return Math.ceil(durationInSeconds * fps)
+}
+
+export function transformSecondsToFrameDuration(draft: RenderDraftData, duration: number) {
+  const fps = draft.meta.fps
+  return Math.ceil(duration * fps)
+}
+
 export function isTargetElement<T extends AllElementType>(
   element: { type: AllElementTypeAllowString } | undefined,
   type: T

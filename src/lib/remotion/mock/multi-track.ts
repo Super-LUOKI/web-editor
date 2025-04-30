@@ -18,7 +18,7 @@ export const MultipleTracksDraft: RenderDraftData = {
         id: 'test_image_1',
         assetId: 'test_image',
         start: 0,
-        length: 2,
+        length: 1,
         width: 1100,
         height: 703,
         crop: {

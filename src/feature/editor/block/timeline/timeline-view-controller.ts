@@ -10,6 +10,20 @@ export class TimelineViewController extends GenericManager<typeof initialState, 
     super(initialState)
   }
 
+  private _timelineContentDomContainer: HTMLElement | null = null
+
+  get timelineContentDomContainer() {
+    return this._timelineContentDomContainer
+  }
+
+  get timelineContentDomRect() {
+    return this._timelineContentDomContainer?.getBoundingClientRect()
+  }
+
+  setTimelineContentDomContainer(dom: HTMLElement | null) {
+    this._timelineContentDomContainer = dom
+  }
+
   onInit(): void | Promise<void> {}
 
   onDestroy(): void | Promise<void> {

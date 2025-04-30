@@ -5,6 +5,7 @@ import { useZustand } from 'use-zustand'
 import { formatSeconds } from '@/common/util/date.ts'
 import { Button } from '@/component/ui/button.tsx'
 import { Slider } from '@/component/ui/slider.tsx'
+import { HEADER_WIDTH } from '@/feature/editor/block/timeline/constant.ts'
 import { useDraftManager } from '@/feature/editor/context/draft-manager.tsx'
 import { usePlayerManager } from '@/feature/editor/context/player-manager.tsx'
 import { useTimelineViewController } from '@/feature/editor/context/timeline-view-controller.tsx'
@@ -77,7 +78,7 @@ export function TimelineAction(props: TimelineActionProps) {
       <div className="flex items-center w-[150px]">
         <Slider
           defaultValue={[pixelPerSecond]}
-          min={containerWidth / duration}
+          min={(containerWidth - HEADER_WIDTH) / duration}
           max={(5 * containerWidth) / duration}
           onValueChange={([relativePixel]) => {
             throttleUpdatePixelPerSecond(relativePixel)
