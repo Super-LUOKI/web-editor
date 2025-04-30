@@ -40,6 +40,10 @@ export class DraftManager extends GenericManager<typeof initialState, InitOption
     return this.state.draft.meta
   }
 
+  get fps() {
+    return this.state.draft.meta.fps
+  }
+
   getElement<T extends AllElementType = AllElementType>(id: string, type?: T) {
     const element = this.state.draft.timeline.elements[id]
     if (!element) throw new ElementNotFoundError({ id, type })

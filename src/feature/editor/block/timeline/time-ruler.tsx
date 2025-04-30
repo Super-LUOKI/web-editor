@@ -4,6 +4,7 @@ import { useZustand } from 'use-zustand'
 import { useDraftManager } from '@/feature/editor/context/draft-manager.tsx'
 import { usePlayerManager } from '@/feature/editor/context/player-manager.tsx'
 import { useTimelineViewController } from '@/feature/editor/context/timeline-view-controller.tsx'
+import { getNearestFrame } from '@/feature/editor/util/draft.ts'
 import { cn } from '@/lib/shadcn/util.ts'
 
 type RulerSection = { duration: number; count: number }
@@ -19,12 +20,24 @@ const rulerSections: RulerSection[] = [
   { duration: 120, count: 4 },
 ]
 
+const FRAME_PIXEL_THRESHOLD = 32
+const DURATION_PIXEL_THRESHOLD = 96
+
 function getMatchedRulerSection(pixelPerSecond: number): RulerSection {
-  const minDisplayedPixelWidth = 96
+  const minDisplayedPixelWidth = DURATION_PIXEL_THRESHOLD
   const section = rulerSections.find(item => {
     return item.duration * pixelPerSecond > minDisplayedPixelWidth
   })
   return section ? section : (rulerSections.at(-1) as RulerSection)
+}
+
+function FrameBlock(props: React.HTMLAttributes<HTMLDivElement>) {
+  const { className, children, ...rest } = props
+  return (
+    <div className={cn('bg-gray-300 absolute left-0 top-0 h-full', className)} {...rest}>
+      {children}
+    </div>
+  )
 }
 
 export function TimeRuler(props: PropsWithChildren<{ className?: string }>) {
@@ -36,6 +49,10 @@ export function TimeRuler(props: PropsWithChildren<{ className?: string }>) {
   const pixelPerSecond = useZustand(vc.store, s => s.pixelPerSecond)
   const duration = useZustand(draftManager.store, s => s.duration)
   const maxDuration = useZustand(vc.store, s => s.maxDuration)
+  const isPlaying = useZustand(playerManager.store, s => s.isPlaying)
+  const currentTime = useZustand(playerManager.store, s => s.currentTime)
+
+  const pixelPerFrame = pixelPerSecond / draftManager.fps
 
   const maxDisplayDuration = Math.min(maxDuration, duration + 1)
 
@@ -51,9 +68,30 @@ export function TimeRuler(props: PropsWithChildren<{ className?: string }>) {
         className="relative bg-gray-100 text-xs text-gray-800 flex items-center select-none h-[15px]"
         onPointerDown={e => {
           const offsetX = e.clientX - e.currentTarget.getBoundingClientRect().left
-          playerManager.seekTo(offsetX / pixelPerSecond)
+          const { frame } = getNearestFrame(offsetX / pixelPerSecond, draftManager.fps)
+          playerManager.seekToFrame(frame)
         }}
       >
+        {/* draw the width of a frame (a frame is the minimum unit of video duration) */}
+        {!isPlaying && pixelPerFrame > FRAME_PIXEL_THRESHOLD && (
+          <>
+            {Math.ceil(currentTime * draftManager.fps) > 0 && (
+              <FrameBlock
+                style={{
+                  width: pixelPerFrame,
+                  left: (Math.ceil(currentTime * draftManager.fps) - 1) * pixelPerFrame,
+                }}
+              />
+            )}
+            <FrameBlock
+              style={{
+                width: pixelPerFrame,
+                left: Math.ceil(currentTime * draftManager.fps) * pixelPerFrame,
+              }}
+            />
+          </>
+        )}
+        {/* draw time */}
         {Array(Math.ceil(maxDisplayDuration / section.duration))
           .fill(null)
           .map((_, mainIndex) => {

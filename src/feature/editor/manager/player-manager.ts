@@ -7,7 +7,6 @@ import { AllElement, DisplayElement } from '@/lib/remotion/editor-render/schema/
 import {
   isDisplayElement,
   shallowWalkTracksElement,
-  transformSecondsToFrameDuration,
 } from '@/lib/remotion/editor-render/utils/draft.ts'
 
 const initialState = {
@@ -73,12 +72,15 @@ export class PlayerManager extends StateManager<typeof initialState> {
     })
   }
 
-  seekTo(duration: number) {
+  seekToFrame(frame: number) {
     if (!this._player) return
+    const durationInFrame = Math.ceil(this.draftManager.state.duration * this.draftManager.fps)
+    const validFrame = Math.min(durationInFrame, Math.max(0, Math.ceil(frame)))
+    this._player?.seekTo(validFrame)
+  }
 
-    const validDuration = Math.min(this.draftManager.state.duration, Math.max(0, duration))
-
-    this._player?.seekTo(transformSecondsToFrameDuration(this.draftManager.draft, validDuration))
+  seekTo(duration: number) {
+    this.seekToFrame(duration * this.draftManager.fps)
   }
 
   setPlayer(player: DraftPlayerRef['player'] | null) {

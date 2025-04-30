@@ -3,12 +3,15 @@ import { useEffect, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
 import { useZustand } from 'use-zustand'
 
+import { useDraftManager } from '@/feature/editor/context/draft-manager.tsx'
 import { usePlayerManager } from '@/feature/editor/context/player-manager.tsx'
 import { useTimelineViewController } from '@/feature/editor/context/timeline-view-controller.tsx'
+import { getNearestFrame } from '@/feature/editor/util/draft.ts'
 import { cn } from '@/lib/shadcn/util.ts'
 
 export function TimeIndicator() {
   const playerManager = usePlayerManager()
+  const draftManager = useDraftManager()
   const vc = useTimelineViewController()
 
   const currentTime = useZustand(playerManager.store, s => s.currentTime)
@@ -21,17 +24,15 @@ export function TimeIndicator() {
     if (!indicatorRef.current) return
     const indicatorEl = indicatorRef.current
 
-    const throttleSeek = lodash.throttle(playerManager.seekTo.bind(playerManager), 100, {
+    const throttleSeekFrame = lodash.throttle(playerManager.seekToFrame.bind(playerManager), 100, {
       leading: true,
       trailing: true,
     })
     const moveIndicator = (left: number) => {
-      console.log({
-        left,
-        time: left / pixelPerSecond,
-      })
-      indicatorEl.style.left = `${left}px`
-      throttleSeek(left / pixelPerSecond)
+      const pixelPerFrame = pixelPerSecond / draftManager.fps
+      const { frame } = getNearestFrame(left / pixelPerSecond, draftManager.fps)
+      indicatorEl.style.left = `${Math.round(pixelPerFrame * frame)}px`
+      throttleSeekFrame(frame)
     }
 
     let isMoving = false
@@ -70,7 +71,7 @@ export function TimeIndicator() {
       document.removeEventListener('pointermove', handleMouseMove)
       document.removeEventListener('pointerup', handlePointerUp)
     }
-  }, [])
+  }, [pixelPerSecond])
 
   return (
     <>

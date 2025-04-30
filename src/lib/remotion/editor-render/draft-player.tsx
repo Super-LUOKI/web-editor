@@ -14,7 +14,7 @@ import {
   RenderContextValue,
 } from './render-context.tsx'
 import { RenderDraftData } from './schema/schema.ts'
-import { calculateDraftDuration } from './utils/draft.ts'
+import { calculateDraftDurationInFrames } from './utils/draft.ts'
 
 type PlayerProps = Omit<
   ComponentPropsWithoutRef<typeof RemotionPlayer>,
@@ -47,7 +47,7 @@ export const DraftPlayer = forwardRef<DraftPlayerRef, PlayerProps>((props, ref) 
 
   const { width, height, fps } = draft.meta
 
-  const durationInFrames = calculateDraftDuration(draft) * fps
+  const durationInFrames = calculateDraftDurationInFrames(draft)
 
   useImperativeHandle(
     ref,

@@ -16,3 +16,9 @@ export function getElementData<T extends AllElementType>(
 export function getDraftTrack(draft: RenderDraftData, trackId: string) {
   return draft.timeline.tracks.find(track => track.id === trackId)
 }
+
+export function getNearestFrame(currentTime: number, fps: number): { frame: number; time: number } {
+  const frame = Math.round(currentTime * fps)
+  const time = Math.round(frame / fps)
+  return { frame, time }
+}
