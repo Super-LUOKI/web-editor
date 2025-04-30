@@ -1,4 +1,4 @@
-import { RenderDraftData } from "../editor-render/schema/schema";
+import { RenderDraftData } from '../editor-render/schema/schema'
 
 export const AnimationDraft: RenderDraftData = {
   timeline: {
@@ -8,7 +8,7 @@ export const AnimationDraft: RenderDraftData = {
         type: 'image',
         src: 'https://haowallpaper.com/link/common/file/previewFileImg/16449373166816640',
         width: 1100,
-        height: 826
+        height: 826,
       },
     },
     elements: {
@@ -26,13 +26,13 @@ export const AnimationDraft: RenderDraftData = {
         scaleY: 1,
         rotate: 0,
         opacity: 1,
-        animation:{
-          type:'keyframe',
-          keyframes:[
+        animation: {
+          type: 'keyframe',
+          keyframes: [
             {
               start: 1,
-              transform:{
-                attributes:{
+              transform: {
+                attributes: {
                   x: -300,
                   y: 0,
                   // rotate: 0,
@@ -42,19 +42,19 @@ export const AnimationDraft: RenderDraftData = {
                 },
                 timing: {
                   type: 'cubic-bezier',
-                  params:{
+                  params: {
                     x1: 0.5,
                     y1: 0,
                     x2: 0.5,
-                    y2: 1
-                  }
-                }
-              }
+                    y2: 1,
+                  },
+                },
+              },
             },
             {
               start: 3,
-              transform:{
-                attributes:{
+              transform: {
+                attributes: {
                   x: 300,
                   y: -200,
                   // rotate: 180,
@@ -62,13 +62,13 @@ export const AnimationDraft: RenderDraftData = {
                   // scaleY: 1.5,
                   // opacity: 0
                 },
-                timing: { type: 'linear' }
-              }
+                timing: { type: 'linear' },
+              },
             },
             {
               start: 6,
-              transform:{
-                attributes:{
+              transform: {
+                attributes: {
                   x: 300,
                   y: 200,
                   // rotate: 180,
@@ -76,27 +76,25 @@ export const AnimationDraft: RenderDraftData = {
                   // scaleY: 1.5,
                   // opacity: 0
                 },
-                timing: { type: 'linear' }
-              }
-            }
-          ]
-        }
-      }
+                timing: { type: 'linear' },
+              },
+            },
+          ],
+        },
+      },
     },
     tracks: [
       {
         id: 'test_track_1',
         type: 'image-video',
-        clips: [
-          { elementId: 'test_image_1' },
-        ],
+        clips: [{ elementId: 'test_image_1' }],
       },
-    ]
+    ],
   },
   background: 'black',
   meta: {
     width: 1920,
     height: 1080,
     fps: 30,
-  }
+  },
 }

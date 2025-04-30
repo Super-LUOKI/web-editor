@@ -1,4 +1,4 @@
-import { RenderDraftData } from "../editor-render/schema/schema";
+import { RenderDraftData } from '../editor-render/schema/schema'
 
 export const TextTestcaseDraft: RenderDraftData = {
   timeline: {
@@ -19,7 +19,7 @@ export const TextTestcaseDraft: RenderDraftData = {
           fontFamily: '宋体',
           fontWeight: 'bold',
           textShadow: '2px 2px 6px #000000',
-        }
+        },
       },
       luo_2: {
         id: 'luo_2',
@@ -36,8 +36,8 @@ export const TextTestcaseDraft: RenderDraftData = {
           fontFamily: '楷体',
           fontWeight: 'normal',
           textShadow: '1px 1px 3px #000000',
-          transform: 'rotate(-10deg)'
-        }
+          transform: 'rotate(-10deg)',
+        },
       },
       luo_3: {
         id: 'luo_3',
@@ -55,7 +55,7 @@ export const TextTestcaseDraft: RenderDraftData = {
           fontWeight: 'bold',
           textShadow: '2px 2px 8px #222',
           transform: 'rotate(8deg)',
-        }
+        },
       },
       luo_4: {
         id: 'luo_4',
@@ -73,7 +73,7 @@ export const TextTestcaseDraft: RenderDraftData = {
           fontWeight: 'bold',
           textShadow: '2px 2px 4px #333',
           transform: 'rotate(-5deg)',
-        }
+        },
       },
       luo_5: {
         id: 'luo_5',
@@ -91,7 +91,7 @@ export const TextTestcaseDraft: RenderDraftData = {
           fontWeight: 'normal',
           textShadow: '0 0 10px #888',
           opacity: 0.8,
-        }
+        },
       },
       luo_6: {
         id: 'luo_6',
@@ -109,7 +109,7 @@ export const TextTestcaseDraft: RenderDraftData = {
           fontWeight: 'bold',
           textShadow: '2px 2px 4px #000',
           transform: 'rotate(90deg)',
-        }
+        },
       },
       luo_7: {
         id: 'luo_7',
@@ -127,8 +127,8 @@ export const TextTestcaseDraft: RenderDraftData = {
           fontWeight: 'lighter',
           textShadow: '1px 1px 2px #111',
           opacity: 0.6,
-        }
-      }
+        },
+      },
     },
     tracks: [
       {
@@ -142,13 +142,13 @@ export const TextTestcaseDraft: RenderDraftData = {
           { elementId: 'luo_5' },
           { elementId: 'luo_6' },
           { elementId: 'luo_7' },
-        ]
-      }
-    ]
+        ],
+      },
+    ],
   },
   meta: {
     width: 1920,
     height: 1080,
     fps: 30,
-  }
-};
+  },
+}

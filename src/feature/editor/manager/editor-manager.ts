@@ -1,8 +1,7 @@
-import { StateManager } from "@/common/object/state-manager.ts";
+import { StateManager } from '@/common/object/state-manager.ts'
 
 const initialState = { selectedElementId: undefined as string | undefined }
-export class EditorManager  extends StateManager<typeof initialState>{
-
+export class EditorManager extends StateManager<typeof initialState> {
   constructor() {
     super(initialState)
   }
@@ -12,5 +11,4 @@ export class EditorManager  extends StateManager<typeof initialState>{
       state.selectedElementId = elementId
     })
   }
-
 }

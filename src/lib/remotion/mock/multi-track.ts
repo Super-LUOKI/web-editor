@@ -1,22 +1,22 @@
-import { RenderDraftData } from "../editor-render/schema/schema";
+import { RenderDraftData } from '../editor-render/schema/schema'
 
 export const MultipleTracksDraft: RenderDraftData = {
-  background: "black",
+  background: 'black',
   timeline: {
     assets: {
       test_image: {
-        id: "test_image",
-        type: "image",
-        src: "https://haowallpaper.com/link/common/file/previewFileImg/15618353851830592",
+        id: 'test_image',
+        type: 'image',
+        src: 'https://haowallpaper.com/link/common/file/previewFileImg/15618353851830592',
         width: 1100,
         height: 703,
       },
     },
     elements: {
       test_image_1: {
-        type: "image",
-        id: "test_image_1",
-        assetId: "test_image",
+        type: 'image',
+        id: 'test_image_1',
+        assetId: 'test_image',
         start: 0,
         length: 2,
         width: 1100,
@@ -35,9 +35,9 @@ export const MultipleTracksDraft: RenderDraftData = {
         opacity: 1,
       },
       test_image_2: {
-        type: "image",
-        id: "test_image_2",
-        assetId: "test_image",
+        type: 'image',
+        id: 'test_image_2',
+        assetId: 'test_image',
         start: 2,
         length: 2,
         width: 1100,
@@ -48,12 +48,12 @@ export const MultipleTracksDraft: RenderDraftData = {
         scaleY: 1,
         rotate: 30,
         opacity: 0.8,
-        background: "#f00",
+        background: '#f00',
       },
       test_image_3: {
-        type: "image",
-        id: "test_image_3",
-        assetId: "test_image",
+        type: 'image',
+        id: 'test_image_3',
+        assetId: 'test_image',
         start: 4,
         length: 2,
         width: 1100,
@@ -66,9 +66,9 @@ export const MultipleTracksDraft: RenderDraftData = {
         opacity: 1,
       },
       test_image_4: {
-        type: "image",
-        id: "test_image_4",
-        assetId: "test_image",
+        type: 'image',
+        id: 'test_image_4',
+        assetId: 'test_image',
         start: 0,
         length: 2,
         width: 1100,
@@ -81,9 +81,9 @@ export const MultipleTracksDraft: RenderDraftData = {
         opacity: 0.7,
       },
       test_image_5: {
-        type: "image",
-        id: "test_image_5",
-        assetId: "test_image",
+        type: 'image',
+        id: 'test_image_5',
+        assetId: 'test_image',
         start: 2,
         length: 2,
         width: 1100,
@@ -96,9 +96,9 @@ export const MultipleTracksDraft: RenderDraftData = {
         opacity: 0.9,
       },
       test_image_6: {
-        type: "image",
-        id: "test_image_6",
-        assetId: "test_image",
+        type: 'image',
+        id: 'test_image_6',
+        assetId: 'test_image',
         start: 4,
         length: 2,
         width: 1100,
@@ -113,21 +113,21 @@ export const MultipleTracksDraft: RenderDraftData = {
     },
     tracks: [
       {
-        id: "test_track_1",
-        type: "image-video",
+        id: 'test_track_1',
+        type: 'image-video',
         clips: [
-          { elementId: "test_image_1" },
-          { elementId: "test_image_2" },
-          { elementId: "test_image_3" },
+          { elementId: 'test_image_1' },
+          { elementId: 'test_image_2' },
+          { elementId: 'test_image_3' },
         ],
       },
       {
-        id: "test_track_2",
-        type: "image-video",
+        id: 'test_track_2',
+        type: 'image-video',
         clips: [
-          { elementId: "test_image_4" },
-          { elementId: "test_image_5" },
-          { elementId: "test_image_6" },
+          { elementId: 'test_image_4' },
+          { elementId: 'test_image_5' },
+          { elementId: 'test_image_6' },
         ],
       },
     ],
@@ -137,4 +137,4 @@ export const MultipleTracksDraft: RenderDraftData = {
     height: 1080,
     fps: 30,
   },
-};
+}

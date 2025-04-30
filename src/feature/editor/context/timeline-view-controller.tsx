@@ -1,11 +1,16 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext } from 'react'
 
-import { TimelineViewController } from "@/feature/editor/block/timeline/timeline-view-controller.ts";
-
+import { TimelineViewController } from '@/feature/editor/block/timeline/timeline-view-controller.ts'
 
 const TimelineViewControllerContext = createContext<TimelineViewController | null>(null)
 
-export function TimelineViewControllerProvider({ children, value }: {children: React.ReactNode, value: TimelineViewController}) {
+export function TimelineViewControllerProvider({
+  children,
+  value,
+}: {
+  children: React.ReactNode
+  value: TimelineViewController
+}) {
   return (
     <TimelineViewControllerContext.Provider value={value}>
       {children}
@@ -13,10 +18,12 @@ export function TimelineViewControllerProvider({ children, value }: {children: R
   )
 }
 
-export function useTimelineViewController(){
+export function useTimelineViewController() {
   const value = useContext(TimelineViewControllerContext)
   if (!value) {
-    throw new Error("useTimelineViewController must be used within a TimelineViewControllerProvider")
+    throw new Error(
+      'useTimelineViewController must be used within a TimelineViewControllerProvider'
+    )
   }
   return value
 }

@@ -1,9 +1,8 @@
-import { Composition } from "remotion";
+import { Composition } from 'remotion'
 
-import { Renderer } from "./editor-render";
-import { calculateDraftDuration } from "./editor-render/utils/draft.ts";
-import { mockDrafts } from "./mock";
-
+import { Renderer } from './editor-render'
+import { calculateDraftDuration } from './editor-render/utils/draft.ts'
+import { mockDrafts } from './mock'
 
 export function RemotionRoot() {
   return (
@@ -20,21 +19,17 @@ export function RemotionRoot() {
             width={1920}
             height={1080}
             defaultProps={{ draft: mockDraft }}
-            calculateMetadata={async (info) => {
-              const { props } = info;
+            calculateMetadata={async info => {
+              const { props } = info
               const { draft } = props
-              const {
-                width, 
-                height,
-                fps
-              } = draft.meta
-              const durationInFrames = Math.floor(calculateDraftDuration(draft) * fps);
+              const { width, height, fps } = draft.meta
+              const durationInFrames = Math.floor(calculateDraftDuration(draft) * fps)
               return {
                 width,
                 height,
                 durationInFrames,
                 fps,
-                props
+                props,
               }
             }}
           />

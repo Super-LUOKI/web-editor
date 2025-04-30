@@ -1,1 +1,1 @@
-export const HEADER_WIDTH = 80;
+export const HEADER_WIDTH = 80

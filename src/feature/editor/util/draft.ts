@@ -1,21 +1,18 @@
-import { RenderDraftData } from "@/lib/remotion/editor-render/schema/schema.ts";
-import {
-  AllElementType,
-  ElementOfType,
-} from "@/lib/remotion/editor-render/schema/util.ts";
+import { RenderDraftData } from '@/lib/remotion/editor-render/schema/schema.ts'
+import { AllElementType, ElementOfType } from '@/lib/remotion/editor-render/schema/util.ts'
 
 export function getElementData<T extends AllElementType>(
   draft: RenderDraftData,
   id: string,
-  type?: T,
+  type?: T
 ) {
-  const elem = draft.timeline.elements[id];
-  if (typeof type !== "undefined" && elem.type !== type) {
-    return undefined;
+  const elem = draft.timeline.elements[id]
+  if (typeof type !== 'undefined' && elem.type !== type) {
+    return undefined
   }
-  return elem as ElementOfType<T>;
+  return elem as ElementOfType<T>
 }
 
 export function getDraftTrack(draft: RenderDraftData, trackId: string) {
-  return draft.timeline.tracks.find((track) => track.id === trackId);
+  return draft.timeline.tracks.find(track => track.id === trackId)
 }

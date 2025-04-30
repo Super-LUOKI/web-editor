@@ -1,3 +1,3 @@
-export function ResourcePanel(){
+export function ResourcePanel() {
   return <div></div>
 }

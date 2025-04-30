@@ -1,7 +1,7 @@
-import { CSSProperties } from "react";
+import { CSSProperties } from 'react'
 
-import { SizeAsset } from "../schema/asset.ts";
-import { DisplayElement } from "../schema/element.ts";
+import { SizeAsset } from '../schema/asset.ts'
+import { DisplayElement } from '../schema/element.ts'
 
 /**
  * 计算媒体元素的剪裁（crop）样式
@@ -40,20 +40,19 @@ export function calcCropStyle(
     height: '100%',
     transformOrigin: '0 0',
     objectFit: 'cover',
-  };
-  const { crop } = element;
-
+  }
+  const { crop } = element
 
   if (crop) {
-    style.objectFit = 'fill';
+    style.objectFit = 'fill'
 
-    const scaleX = asset.width && crop.width ? (100 * asset.width) / crop.width : 100;
-    const scaleY = asset.height && crop.height ? (100 * asset.height) / crop.height : 100;
+    const scaleX = asset.width && crop.width ? (100 * asset.width) / crop.width : 100
+    const scaleY = asset.height && crop.height ? (100 * asset.height) / crop.height : 100
 
-    const x = asset.width ? (-100 * crop.x) / asset.width : 0;
-    const y = asset.height ? (-100 * crop.y) / asset.height : 0;
+    const x = asset.width ? (-100 * crop.x) / asset.width : 0
+    const y = asset.height ? (-100 * crop.y) / asset.height : 0
 
-    style.transform = `scale(${scaleX}%,${scaleY}%) translate(${x}%,${y}%)`;
+    style.transform = `scale(${scaleX}%,${scaleY}%) translate(${x}%,${y}%)`
   }
-  return style;
+  return style
 }

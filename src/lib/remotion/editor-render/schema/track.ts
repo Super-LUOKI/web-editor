@@ -1,14 +1,8 @@
-import { z } from "zod";
+import { z } from 'zod'
 
-export const TrackCategorySchema = z.enum([
-  "caption",
-  "voiceover",
-  "audio",
-  "text",
-  "image-video",
-]);
+export const TrackCategorySchema = z.enum(['caption', 'voiceover', 'audio', 'text', 'image-video'])
 
-export const TrackClip = z.object({ elementId: z.string() });
+export const TrackClip = z.object({ elementId: z.string() })
 
 export const TrackSchema = z.object({
   type: TrackCategorySchema,
@@ -18,7 +12,7 @@ export const TrackSchema = z.object({
    */
   clips: z.array(TrackClip),
   hidden: z.boolean().optional(),
-});
+})
 
-export type RenderTrackClip = z.infer<typeof TrackClip>;
-export type RenderTrack = z.infer<typeof TrackSchema>;
+export type RenderTrackClip = z.infer<typeof TrackClip>
+export type RenderTrack = z.infer<typeof TrackSchema>

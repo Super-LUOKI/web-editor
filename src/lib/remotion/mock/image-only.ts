@@ -1,4 +1,4 @@
-import { RenderDraftData } from "../editor-render/schema/schema";
+import { RenderDraftData } from '../editor-render/schema/schema'
 
 export const ImageOnlyDraft1: RenderDraftData = {
   background: 'black',
@@ -9,7 +9,7 @@ export const ImageOnlyDraft1: RenderDraftData = {
         type: 'image',
         src: 'https://haowallpaper.com/link/common/file/previewFileImg/15618353851830592',
         width: 1100,
-        height: 703
+        height: 703,
       },
     },
     elements: {
@@ -48,7 +48,7 @@ export const ImageOnlyDraft1: RenderDraftData = {
         scaleY: 1,
         rotate: 60,
         opacity: 0.8,
-        background:'#f00'
+        background: '#f00',
       },
       test_image_3: {
         type: 'image',
@@ -76,11 +76,11 @@ export const ImageOnlyDraft1: RenderDraftData = {
           { elementId: 'test_image_3' },
         ],
       },
-    ]
+    ],
   },
   meta: {
     width: 1920,
     height: 1080,
     fps: 30,
-  }
+  },
 }

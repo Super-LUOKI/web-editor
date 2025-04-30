@@ -1,1 +1,1 @@
-export { IconPark, createIconComponent } from './icon';
+export { IconPark, createIconComponent } from './icon'

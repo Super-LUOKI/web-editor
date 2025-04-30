@@ -1,9 +1,8 @@
-import { CSSProperties } from "react";
-import { z } from "zod";
+import { CSSProperties } from 'react'
+import { z } from 'zod'
 
-import { AllAnimationSchema } from "./animation.ts";
-import { RectSchema } from "./common.ts";
-
+import { AllAnimationSchema } from './animation.ts'
+import { RectSchema } from './common.ts'
 
 export const BaseElementSchema = z.object({
   id: z.string(),
@@ -39,9 +38,9 @@ export const DisplayElementSchema = BaseElementSchema.extend({
 
   crop: RectSchema.optional(),
   /**
-     * a path or shape name: like circle; circle:50%,50%;  path:z1...;
-     * @link https://developer.mozilla.org/en-US/docs/Web/CSS/clip-path
-     */
+   * a path or shape name: like circle; circle:50%,50%;  path:z1...;
+   * @link https://developer.mozilla.org/en-US/docs/Web/CSS/clip-path
+   */
   shape: z.string().optional(),
   /** @link https://developer.mozilla.org/en-US/docs/Web/CSS/filter */
   filter: z.string().optional(),
@@ -54,16 +53,15 @@ export const DisplayElementSchema = BaseElementSchema.extend({
   background: z.string().optional(),
 })
 
-
 export const ImageElementSchema = DisplayElementSchema.extend({
   type: z.literal('image'),
   assetId: z.string(),
 })
 
 export const TextElementSchema = DisplayElementSchema.extend({
-  type:z.literal('text'),
+  type: z.literal('text'),
   text: z.string(),
-  style: z.custom<CSSProperties>().optional()
+  style: z.custom<CSSProperties>().optional(),
 })
 
 export const AudioElementSchema = BaseElementSchema.extend({
@@ -81,13 +79,12 @@ export const AudioElementSchema = BaseElementSchema.extend({
 export const AllElementSchema = z.discriminatedUnion('type', [
   ImageElementSchema,
   AudioElementSchema,
-  TextElementSchema
+  TextElementSchema,
 ])
 
+export type DisplayElement = z.infer<typeof DisplayElementSchema>
 
-export type DisplayElement = z.infer<typeof DisplayElementSchema>;
-
-export type ImageElement = z.infer<typeof ImageElementSchema>;
-export type AudioElement = z.infer<typeof AudioElementSchema>;
-export type TextElement = z.infer<typeof TextElementSchema>;
-export type AllElement = z.infer<typeof AllElementSchema>;
+export type ImageElement = z.infer<typeof ImageElementSchema>
+export type AudioElement = z.infer<typeof AudioElementSchema>
+export type TextElement = z.infer<typeof TextElementSchema>
+export type AllElement = z.infer<typeof AllElementSchema>

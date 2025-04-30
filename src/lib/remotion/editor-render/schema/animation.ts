@@ -1,16 +1,16 @@
-import { z } from "zod";
+import { z } from 'zod'
 
-import { AnimationTimingSchema } from "./animation-timing.ts";
+import { AnimationTimingSchema } from './animation-timing.ts'
 
 export const SupportTransformSchema = z.union([z.literal('opacity'), z.literal('rotate')])
 export const SupportAttribute = z.union([
   z.literal('x'),
   z.literal('y'),
-  z.literal(  'rotate'),
-  z.literal(  'scaleX'),
-  z.literal(  'scaleY'),
+  z.literal('rotate'),
+  z.literal('scaleX'),
+  z.literal('scaleY'),
   z.literal('opacity'),
-  z.literal('volume')
+  z.literal('volume'),
 ])
 
 export const BasicAnimationAttributeSchema = z.record(SupportAttribute, z.number().optional())
@@ -24,12 +24,14 @@ export const AnimationTransformSchema = z.object({
 
 export const KeyFrameAnimationSchema = z.object({
   type: z.literal('keyframe'),
-  keyframes: z.array(z.object({
-    /** The scope of a single keyframe is a left-closed and right-open interval like [from, from + duration). */
-    start: z.number(),
-    transform: AnimationTransformSchema
-  })),
-});
+  keyframes: z.array(
+    z.object({
+      /** The scope of a single keyframe is a left-closed and right-open interval like [from, from + duration). */
+      start: z.number(),
+      transform: AnimationTransformSchema,
+    })
+  ),
+})
 
 export const PresetAnimationSchema = z.object({
   name: z.string(),
@@ -48,10 +50,9 @@ export const AllAnimationSchema = z.discriminatedUnion('type', [
   LoopAnimationSchema,
 ])
 
-
-export type BasicAnimationAttribute = z.infer<typeof BasicAnimationAttributeSchema>;
-export type KeyFrameAnimation = z.infer<typeof KeyFrameAnimationSchema>;
-export type PresetAnimation = z.infer<typeof PresetAnimationSchema>;
-export type InAnimation = z.infer<typeof InAnimationSchema>;
-export type OutAnimation = z.infer<typeof OutAnimationSchema>;
-export type LoopAnimation = z.infer<typeof LoopAnimationSchema>;
+export type BasicAnimationAttribute = z.infer<typeof BasicAnimationAttributeSchema>
+export type KeyFrameAnimation = z.infer<typeof KeyFrameAnimationSchema>
+export type PresetAnimation = z.infer<typeof PresetAnimationSchema>
+export type InAnimation = z.infer<typeof InAnimationSchema>
+export type OutAnimation = z.infer<typeof OutAnimationSchema>
+export type LoopAnimation = z.infer<typeof LoopAnimationSchema>
