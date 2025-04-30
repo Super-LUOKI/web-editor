@@ -15,7 +15,7 @@ export function TimelineTrackClip(props: TrackClipProps) {
   return (
     <div
       className={cn(
-        'rounded-lg duration-100 flex items-center px-2',
+        'rounded-lg duration-100 flex items-center px-2 select-none overflow-hidden',
         'border-[2px] border-solid border-gray-300 hover:border-cyan-700/80',
         selectedElementId === clip.elementId && 'border-cyan-700/80',
         className

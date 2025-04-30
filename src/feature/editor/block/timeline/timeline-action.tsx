@@ -79,7 +79,7 @@ export function TimelineAction(props: TimelineActionProps) {
         <Slider
           defaultValue={[pixelPerSecond]}
           min={(containerWidth - HEADER_WIDTH) / duration}
-          max={(5 * containerWidth) / duration}
+          max={1000}
           onValueChange={([relativePixel]) => {
             throttleUpdatePixelPerSecond(relativePixel)
           }}
