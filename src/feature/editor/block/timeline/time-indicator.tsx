@@ -30,7 +30,10 @@ export function TimeIndicator() {
     })
     const moveIndicator = (left: number) => {
       const pixelPerFrame = pixelPerSecond / draftManager.fps
-      const { frame } = getNearestFrame(left / pixelPerSecond, draftManager.fps)
+      const { frame } = getNearestFrame(
+        Math.min(left / pixelPerSecond, playerManager.duration),
+        draftManager.fps
+      )
       indicatorEl.style.left = `${Math.round(pixelPerFrame * frame)}px`
       throttleSeekFrame(frame)
     }

@@ -28,6 +28,10 @@ export class PlayerManager extends StateManager<typeof initialState> {
     return this._player
   }
 
+  get duration() {
+    return this.draftManager.state.duration
+  }
+
   constructor(private readonly draftManager: DraftManager) {
     super(initialState)
   }

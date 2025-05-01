@@ -54,7 +54,8 @@ export function TimelineAction(props: TimelineActionProps) {
         className
       )}
     >
-      <div>Left Actions</div>
+      {/* 占位，用于支撑between布局，以及后续可能从这里增加内容 */}
+      <div></div>
       <div className="flex items-center gap-2">
         <Button
           variant="outline"
