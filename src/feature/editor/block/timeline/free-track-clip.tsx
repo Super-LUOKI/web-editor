@@ -22,14 +22,18 @@ export function FreeTrackClip(props: FreeTrackClipProps) {
     undefined
   )
 
+  /** state unrelated, need to get state manually, todo optimize it */
   const getPixelRange = (leftOffset: number, rightOffset: number) => {
     const newestDraftEl = draftManager.getElement(clip.elementId)
+    const newPixelPerSecond = vc.state.pixelPerSecond
     if (!newestDraftEl) return
-    const pixelPerFrame = pixelPerSecond / draftManager.fps
+    const pixelPerFrame = newPixelPerSecond / draftManager.fps
     const newLeftOffset = Math.round(leftOffset / pixelPerFrame) * pixelPerFrame
-    const newRightOffset = Math.round(rightOffset / pixelPerFrame) * pixelPerFrame
-    const start = newestDraftEl.start * pixelPerSecond + newLeftOffset
-    const width = newestDraftEl.length * pixelPerSecond - newLeftOffset + newRightOffset
+    const start = newestDraftEl.start * newPixelPerSecond + newLeftOffset
+    const width =
+      Math.round(
+        (newestDraftEl.length * newPixelPerSecond - newLeftOffset + rightOffset) / pixelPerFrame
+      ) * pixelPerFrame
 
     if (start < 0 || width <= RESIZE_HANDLER_WIDTH) return
     return {
@@ -51,15 +55,18 @@ export function FreeTrackClip(props: FreeTrackClipProps) {
       leftHandler={<div className=" h-full" style={{ width: RESIZE_HANDLER_WIDTH }}></div>}
       rightHandler={<div className=" h-full" style={{ width: RESIZE_HANDLER_WIDTH }}></div>}
       onResizing={(left, right) => {
+        /** state unrelated, need to get state manually, todo optimize it */
         const pixelRange = getPixelRange(left, right)
         if (!pixelRange) return
         setInnerRange(getPixelRange(left, right))
       }}
       onResizeComplete={(left, right) => {
+        /** state unrelated, need to get state manually, todo optimize it */
         const pixelRange = getPixelRange(left, right)
+        const newPixelPerSecond = vc.state.pixelPerSecond
         if (!pixelRange) return
-        const start = pixelRange.start / pixelPerSecond
-        const length = pixelRange.width / pixelPerSecond
+        const start = pixelRange.start / newPixelPerSecond
+        const length = pixelRange.width / newPixelPerSecond
         draftManager.updateElement(draftEl.id, { start, length })
         setInnerRange(undefined)
       }}
