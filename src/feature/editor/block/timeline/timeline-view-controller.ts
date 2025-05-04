@@ -11,9 +11,14 @@ export class TimelineViewController extends GenericManager<typeof initialState, 
   }
 
   private _timelineContentDomContainer: HTMLElement | null = null
+  private _timelineIndicatorDom: HTMLElement | null = null
 
   get timelineContentDomContainer() {
     return this._timelineContentDomContainer
+  }
+
+  get timelineIndicatorDom() {
+    return this._timelineIndicatorDom
   }
 
   get timelineContentDomRect() {
@@ -22,6 +27,10 @@ export class TimelineViewController extends GenericManager<typeof initialState, 
 
   setTimelineContentDomContainer(dom: HTMLElement | null) {
     this._timelineContentDomContainer = dom
+  }
+
+  setTimelineIndicatorDom(dom: HTMLElement | null) {
+    this._timelineIndicatorDom = dom
   }
 
   onInit(): void | Promise<void> {}

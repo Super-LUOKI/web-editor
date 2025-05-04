@@ -70,6 +70,9 @@ export function TimeRuler(props: PropsWithChildren<{ className?: string }>) {
           const offsetX = e.clientX - e.currentTarget.getBoundingClientRect().left
           const { frame } = getNearestFrame(offsetX / pixelPerSecond, draftManager.fps)
           playerManager.seekToFrame(frame)
+          vc.timelineIndicatorDom?.dispatchEvent(
+            new PointerEvent('pointerdown', { bubbles: false, cancelable: true })
+          )
         }}
       >
         {/* draw the width of a frame (a frame is the minimum unit of video duration) */}

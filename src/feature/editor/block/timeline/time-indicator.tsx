@@ -81,7 +81,11 @@ export function TimeIndicator() {
     <>
       <FullscreenMask show={!isIndicatorFollowTime} />
       <div
-        ref={indicatorRef}
+        ref={elem => {
+          if (!elem) return
+          indicatorRef.current = elem
+          vc.setTimelineIndicatorDom(elem)
+        }}
         className={cn('absolute left-0 top-0 -translate-x-1/2 w-3 h-full z-1000 cursor-ew-resize')}
         style={isIndicatorFollowTime ? { left: currentTime * pixelPerSecond } : {}}
       >
