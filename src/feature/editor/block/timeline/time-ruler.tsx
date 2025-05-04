@@ -71,7 +71,11 @@ export function TimeRuler(props: PropsWithChildren<{ className?: string }>) {
           const { frame } = getNearestFrame(offsetX / pixelPerSecond, draftManager.fps)
           playerManager.seekToFrame(frame)
           vc.timelineIndicatorDom?.dispatchEvent(
-            new PointerEvent('pointerdown', { bubbles: false, cancelable: true })
+            new PointerEvent('pointerdown', {
+              bubbles: false,
+              cancelable: true,
+              clientX: e.clientX,
+            })
           )
         }}
       >

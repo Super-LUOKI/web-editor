@@ -40,6 +40,8 @@
     "lucide-react": "^0.487.0",
     "moveable": "^0.53.0",
     "react": "^19.0.0",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^19.0.0",
     "remotion": "4.0.286",
     "resize-observer-polyfill": "^1.5.1",

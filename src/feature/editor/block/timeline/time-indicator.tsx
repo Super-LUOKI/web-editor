@@ -35,7 +35,7 @@ export function TimeIndicator() {
         Math.min(left / pixelPerSecond, playerManager.duration),
         draftManager.fps
       )
-      indicatorEl.style.left = `${Math.round(pixelPerFrame * frame)}px`
+      indicatorEl.style.left = `${pixelPerFrame * frame}px`
       throttleSeekFrame(frame)
     }
 
