@@ -8,10 +8,11 @@ import { getAttributeWithOverwrite } from '../utils/draft.ts'
 
 type VisualContainerProps = PropsWithChildren<{
   element: DisplayElement
+  style?: CSSProperties
 }>
 
 export function VisualContainer(props: VisualContainerProps) {
-  const { element } = props
+  const { element, style } = props
 
   const ref = useRef<HTMLDivElement | null>(null)
   const { fps } = useVideoConfig()
@@ -21,7 +22,7 @@ export function VisualContainer(props: VisualContainerProps) {
 
   const animAttribute = useMemo(() => {
     return animation?.getAnimationProperty(currentFrame / fps - element.start)
-  }, [animation, currentFrame, fps])
+  }, [animation, currentFrame, element.start, fps])
 
   const elementX = getAttributeWithOverwrite(element, 'x', animAttribute, 0)
   const elementY = getAttributeWithOverwrite(element, 'y', animAttribute, 0)
@@ -55,6 +56,7 @@ export function VisualContainer(props: VisualContainerProps) {
         ].join(' '),
         opacity: elementOpacity,
         mixBlendMode: element.blendMode as CSSProperties['mixBlendMode'],
+        ...style,
       }}
     >
       <div

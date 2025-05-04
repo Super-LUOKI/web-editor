@@ -9,7 +9,6 @@ import { cn } from '@/lib/shadcn/util.ts'
 
 const trackTitleMap: Record<RenderTrack['type'], string> = {
   ['caption']: 'Caption',
-  ['voiceover']: 'Voiceover',
   ['audio']: 'Audio',
   ['text']: 'Text',
   ['image-video']: 'Media',

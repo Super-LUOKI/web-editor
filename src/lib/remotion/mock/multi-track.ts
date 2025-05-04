@@ -1,7 +1,7 @@
 import { RenderDraftData } from '../editor-render/schema/schema'
 
 export const MultipleTracksDraft: RenderDraftData = {
-  background: 'black',
+  background: '#fcf4ea',
   timeline: {
     assets: {
       test_image: {
@@ -10,6 +10,12 @@ export const MultipleTracksDraft: RenderDraftData = {
         src: 'https://haowallpaper.com/link/common/file/previewFileImg/15618353851830592',
         width: 1100,
         height: 703,
+      },
+      test_audio_1: {
+        id: 'test_audio_1',
+        type: 'audio',
+        src: 'https://m702.music.126.net/20250504231746/d35bd325ef40e7a37ac641618517478e/jd-musicrep-ts/c659/4cec/e221/94b1bde8bc3fcc21f12612d871f8bd86.mp3?vuutv=CrGwd4tTqAt9DhAysC/EHhxp1D4UyraiQ/wQda3whvXA7sADgy74NU1OcnMWtSvMRqKO0BbMMtlP11f5Km0M4PZ+ecCDobc3O2SagsW2yxjL/B5w1DAp1iErwoyqLc1nqztYBJcvoJk/vr3Iy+t2j9MsoBfYx1Wwh3GvWNaRbUQ=',
+        duration: 191,
       },
     },
     elements: {
@@ -110,10 +116,68 @@ export const MultipleTracksDraft: RenderDraftData = {
         rotate: 75,
         opacity: 0.6,
       },
+      test_audio_1: {
+        type: 'audio',
+        id: 'test_audio_1',
+        assetId: 'test_audio_1',
+        start: 0,
+        length: 10,
+        startFrom: 40,
+        endAt: 50,
+      },
+      test_audio_2: {
+        type: 'audio',
+        id: 'test_audio_2',
+        assetId: 'test_audio_1',
+        start: 12,
+        length: 10,
+        startFrom: 50,
+        endAt: 60,
+      },
+      test_text_1: {
+        id: 'test_text_1',
+        type: 'text',
+        x: 100,
+        y: 100,
+        text: 'Hello World',
+        start: 1,
+        length: 3,
+        style: {
+          fontSize: 100,
+          color: '#000',
+          textAlign: 'center',
+          fontFamily: 'Arial',
+          fontWeight: 'bold',
+          textShadow: '2px 2px 4px #000000',
+        },
+        scaleX: 1,
+        scaleY: 1,
+        rotate: 0,
+      },
+      test_text_2: {
+        type: 'text',
+        id: 'test_text_2',
+        x: 200,
+        y: 50,
+        text: 'LuoKing',
+        start: 2,
+        length: 4,
+        style: {
+          fontSize: 50,
+          color: '#f00',
+          textAlign: 'left',
+          fontFamily: 'Arial',
+          fontWeight: 'normal',
+          textShadow: '1px 1px 2px #000000',
+        },
+        scaleX: 1,
+        scaleY: 1,
+        rotate: 0,
+      },
     },
     tracks: [
       {
-        id: 'test_track_1',
+        id: 'test_image_track_1',
         type: 'image-video',
         clips: [
           { elementId: 'test_image_1' },
@@ -129,6 +193,16 @@ export const MultipleTracksDraft: RenderDraftData = {
           { elementId: 'test_image_5' },
           { elementId: 'test_image_6' },
         ],
+      },
+      {
+        id: 'test_audio_track_1',
+        type: 'audio',
+        clips: [{ elementId: 'test_audio_1' }, { elementId: 'test_audio_2' }],
+      },
+      {
+        id: 'test_text_track_1',
+        type: 'text',
+        clips: [{ elementId: 'test_text_1' }, { elementId: 'test_text_2' }],
       },
     ],
   },
