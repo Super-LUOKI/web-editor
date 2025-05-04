@@ -9,19 +9,23 @@ type TrackClipProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'onClick'> & {
 }
 
 export function TimelineTrackClip(props: TrackClipProps) {
-  const { className, clip, ...rest } = props
+  const { className, clip, style, ...rest } = props
   const editorManager = useEditorManager()
   const selectedElementId = useZustand(editorManager.store, s => s.selectedElementId)
   return (
     <div
       className={cn(
-        'rounded-lg duration-100 flex items-center px-2 select-none overflow-hidden',
+        'rounded-lg flex items-center px-2 select-none overflow-hidden box-border',
         'border-[2px] border-solid border-gray-300 hover:border-cyan-700/80',
         selectedElementId === clip.elementId && 'border-cyan-700/80',
         className
       )}
       onClick={() => {
         editorManager.selectElement(clip.elementId)
+      }}
+      style={{
+        transition: 'border-color 0.15s ease-in-out',
+        ...style,
       }}
       {...rest}
     >

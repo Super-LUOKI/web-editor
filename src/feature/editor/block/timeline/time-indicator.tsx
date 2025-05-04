@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
 import { useZustand } from 'use-zustand'
 
+import { FullscreenMask } from '@/feature/editor/component/fullscreen-mask.tsx'
 import { useDraftManager } from '@/feature/editor/context/draft-manager.tsx'
 import { usePlayerManager } from '@/feature/editor/context/player-manager.tsx'
 import { useTimelineViewController } from '@/feature/editor/context/timeline-view-controller.tsx'
@@ -78,9 +79,7 @@ export function TimeIndicator() {
 
   return (
     <>
-      {!isIndicatorFollowTime && (
-        <div className="w-screen h-screen fixed left-0 top-0 z-[9999] cursor-ew-resize"></div>
-      )}
+      <FullscreenMask show={!isIndicatorFollowTime} />
       <div
         ref={indicatorRef}
         className={cn('absolute left-0 top-0 -translate-x-1/2 w-3 h-full z-1000 cursor-ew-resize')}
