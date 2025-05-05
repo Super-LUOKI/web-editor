@@ -96,7 +96,7 @@ export function TimelineTrack(props: TimelineTrackProps) {
         ))}
         {isOver && movingElement.id && (
           <TrackClipPlaceholder
-            allow={false}
+            allow={true}
             start={movingElement.start}
             length={movingElement.length}
           />
