@@ -48,23 +48,26 @@ export function TimelineTrack(props: TimelineTrackProps) {
     return { start, length }
   }
 
-  const [{ isOver }, drop] = useDrop(() => ({
-    accept: EditorDragType.Clip,
-    drop: (item: ClipDragItem, monitor) => {
-      if (!monitor.canDrop()) return
-      const range = getMovingRange(item.elementId, monitor.getDifferenceFromInitialOffset()?.x)
-      if (!range) return
-      draftManager.updateElement(item.elementId, range)
-      setMovingElement({ id: '', start: 0, length: 0 })
-    },
-    hover: (item: ClipDragItem, monitor) => {
-      if (!monitor.isOver() || !monitor.canDrop()) return
-      const range = getMovingRange(item.elementId, monitor.getDifferenceFromInitialOffset()?.x)
-      if (!range) return
-      setMovingElement({ ...range, id: item.elementId })
-    },
-    collect: monitor => ({ isOver: monitor.isOver() }),
-  }))
+  const [{ isOver }, drop] = useDrop(
+    () => ({
+      accept: EditorDragType.Clip,
+      drop: (item: ClipDragItem, monitor) => {
+        if (!monitor.canDrop()) return
+        const range = getMovingRange(item.elementId, monitor.getDifferenceFromInitialOffset()?.x)
+        if (!range) return
+        draftManager.updateElement(item.elementId, range)
+        setMovingElement({ id: '', start: 0, length: 0 })
+      },
+      hover: (item: ClipDragItem, monitor) => {
+        if (!monitor.isOver() || !monitor.canDrop()) return
+        const range = getMovingRange(item.elementId, monitor.getDifferenceFromInitialOffset()?.x)
+        if (!range) return
+        setMovingElement({ ...range, id: item.elementId })
+      },
+      collect: monitor => ({ isOver: monitor.isOver() }),
+    }),
+    [pixelPerSecond]
+  )
 
   if (!track) {
     console.error('Track not found:', trackId)
