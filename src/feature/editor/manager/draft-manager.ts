@@ -4,14 +4,16 @@ import { GenericManager } from '@/common/object/generic-manager.ts'
 import { ElementNotFoundError } from '@/feature/editor/manager/error/element-not-found-error.ts'
 import { ElementTypeError } from '@/feature/editor/manager/error/element-type-error.ts'
 import { editorMockDraft } from '@/feature/editor/util'
-import { getElementData } from '@/feature/editor/util/draft.ts'
+import { getElementData, getNearestFrame } from '@/feature/editor/util/draft.ts'
 import { AllElement, DisplayElement } from '@/lib/remotion/editor-render/schema/element.ts'
 import { RenderDraftData } from '@/lib/remotion/editor-render/schema/schema.ts'
 import { AllElementType } from '@/lib/remotion/editor-render/schema/util.ts'
 import {
   calculateDraftDuration,
+  calculateDraftDurationInFrames,
   isDisplayElement,
 } from '@/lib/remotion/editor-render/utils/draft.ts'
+
 type InitOptions = {
   videoId: string
 }
@@ -21,7 +23,7 @@ const emptyDraft: RenderDraftData = {
   meta: { fps: 30, width: 1920, height: 1080 },
 }
 
-const initialState = { draft: emptyDraft, duration: 0 }
+const initialState = { draft: emptyDraft, duration: 0, frameDuration: 0 }
 
 export class DraftManager extends GenericManager<typeof initialState, InitOptions> {
   constructor() {
@@ -44,6 +46,10 @@ export class DraftManager extends GenericManager<typeof initialState, InitOption
     return this.state.draft.meta.fps
   }
 
+  get duration() {
+    return this.state.duration
+  }
+
   getElement<T extends AllElementType = AllElementType>(id: string, type?: T) {
     const element = this.state.draft.timeline.elements[id]
     if (!element) throw new ElementNotFoundError({ id, type })
@@ -59,6 +65,11 @@ export class DraftManager extends GenericManager<typeof initialState, InitOption
       if (!rawElement) throw new ElementNotFoundError({ id })
       Object.assign(rawElement, element)
     })
+  }
+
+  getNearestFrameTime(time: number) {
+    const { time: frameTime } = getNearestFrame(time, this.fps)
+    return Math.max(0, Math.min(this.state.duration, frameTime))
   }
 
   updateDisplayElement(id: string, element: Partial<DisplayElement>) {
@@ -97,6 +108,8 @@ export class DraftManager extends GenericManager<typeof initialState, InitOption
   setDraft(draft: RenderDraftData) {
     this.setState(state => {
       state.draft = draft
+      state.duration = calculateDraftDuration(draft)
+      state.frameDuration = calculateDraftDurationInFrames(draft)
     })
   }
 }

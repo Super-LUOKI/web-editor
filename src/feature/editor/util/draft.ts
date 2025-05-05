@@ -19,6 +19,6 @@ export function getDraftTrack(draft: RenderDraftData, trackId: string) {
 
 export function getNearestFrame(currentTime: number, fps: number): { frame: number; time: number } {
   const frame = Math.max(0, Math.round(currentTime * fps))
-  const time = Math.max(0, Math.round(frame / fps))
+  const time = Math.max(0, frame / fps)
   return { frame, time }
 }

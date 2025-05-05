@@ -1,20 +1,21 @@
 import { ComponentPropsWithoutRef, useState } from 'react'
 import { useDrag } from 'react-dnd'
 
-import { useZustand } from '@/common/hook/use-zustand'
-import { TimelineTrackClip } from '@/feature/editor/block/timeline/timeline-track-clip.tsx'
+import { useZustand } from '@/common/hook/use-zustand.ts'
+import { TimelineTrackClip } from '@/feature/editor/block/timeline/track/timeline-track-clip.tsx'
 import { ResizeWrapper } from '@/feature/editor/component/resize-wrapper.tsx'
 import { useDraftManager } from '@/feature/editor/context/draft-manager.tsx'
 import { useTimelineViewController } from '@/feature/editor/context/timeline-view-controller.tsx'
 import { ClipDragItem, EditorDragType } from '@/feature/editor/util/constant.ts'
 import { getElementData } from '@/feature/editor/util/draft.ts'
+import { cn } from '@/lib/shadcn/util.ts'
 
 type FreeTrackClipProps = Omit<ComponentPropsWithoutRef<typeof TimelineTrackClip>, 'style'>
 
 const RESIZE_HANDLER_WIDTH = 4
 
 export function FreeTrackClip(props: FreeTrackClipProps) {
-  const { clip, ...rest } = props
+  const { className, clip, ...rest } = props
   const draftManager = useDraftManager()
   const vc = useTimelineViewController()
   const pixelPerSecond = useZustand(vc.store, s => s.pixelPerSecond)
@@ -56,7 +57,7 @@ export function FreeTrackClip(props: FreeTrackClipProps) {
       ref={elem => {
         if (elem) drag(elem)
       }}
-      className="absolute rounded-lg overflow-hidden"
+      className={cn('absolute rounded-lg overflow-hidden', className)}
       style={{
         height: 'calc(100% - 4px)',
         left: `${innerRange?.start || draftEl.start * pixelPerSecond}px`,
