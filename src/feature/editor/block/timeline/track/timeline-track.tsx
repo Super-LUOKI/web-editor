@@ -31,8 +31,7 @@ export function TimelineTrack(props: TimelineTrackProps) {
   const track = useZustand(draftManager.store, s => getDraftTrack(s.draft, trackId))
   const pixelPerSecond = useZustand(vc.store, s => s.pixelPerSecond)
 
-  const [movingElement, setMovingElement] = useState<Pick<AllElement, 'id' | 'start' | 'length'>>({
-    id: '',
+  const [movingRange, setMovingRange] = useState<Pick<AllElement, 'start' | 'length'>>({
     start: 0,
     length: 0,
   })
@@ -48,25 +47,36 @@ export function TimelineTrack(props: TimelineTrackProps) {
     return { start, length }
   }
 
-  const [{ isOver }, drop] = useDrop(
+  const [{ isOver, canDrop }, drop] = useDrop(
     () => ({
       accept: EditorDragType.Clip,
       drop: (item: ClipDragItem, monitor) => {
         if (!monitor.canDrop()) return
         const range = getMovingRange(item.elementId, monitor.getDifferenceFromInitialOffset()?.x)
         if (!range) return
+        const elementTrack = draftManager.getTrackByElement(item.elementId)
+        if (!elementTrack || !track) return
+        if (elementTrack.id !== track.id) {
+          draftManager.moveToTrack(item.elementId, track.id)
+        }
         draftManager.updateElement(item.elementId, range)
-        setMovingElement({ id: '', start: 0, length: 0 })
+
+        setMovingRange({ start: 0, length: 0 })
       },
       hover: (item: ClipDragItem, monitor) => {
         if (!monitor.isOver() || !monitor.canDrop()) return
         const range = getMovingRange(item.elementId, monitor.getDifferenceFromInitialOffset()?.x)
         if (!range) return
-        setMovingElement({ ...range, id: item.elementId })
+        setMovingRange(range)
       },
-      collect: monitor => ({ isOver: monitor.isOver() }),
+      canDrop: item => {
+        const elementTrack = draftManager.getTrackByElement(item.elementId)
+        if (!elementTrack || !track) return false
+        return elementTrack.type === track.type
+      },
+      collect: monitor => ({ isOver: monitor.isOver(), canDrop: monitor.canDrop() }),
     }),
-    [pixelPerSecond]
+    [pixelPerSecond, track]
   )
 
   if (!track) {
@@ -91,18 +101,10 @@ export function TimelineTrack(props: TimelineTrackProps) {
         className="w-full h-full relative flex items-center"
       >
         {track.clips.map((clip, index) => (
-          <FreeTrackClip
-            key={index}
-            clip={clip}
-            className={cn(movingElement.id === clip.elementId && 'hidden')}
-          />
+          <FreeTrackClip key={index} clip={clip} />
         ))}
-        {isOver && movingElement.id && (
-          <TrackClipPlaceholder
-            allow={true}
-            start={movingElement.start}
-            length={movingElement.length}
-          />
+        {isOver && canDrop && (
+          <TrackClipPlaceholder allow start={movingRange.start} length={movingRange.length} />
         )}
       </div>
     </div>

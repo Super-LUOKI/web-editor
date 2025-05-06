@@ -3,8 +3,14 @@ import lodash from 'lodash'
 import { GenericManager } from '@/common/object/generic-manager.ts'
 import { ElementNotFoundError } from '@/feature/editor/manager/error/element-not-found-error.ts'
 import { ElementTypeError } from '@/feature/editor/manager/error/element-type-error.ts'
+import { TrackNotFoundedError } from '@/feature/editor/manager/error/track-not-founded-error.ts'
 import { editorMockDraft } from '@/feature/editor/util'
-import { getElementData, getNearestFrame } from '@/feature/editor/util/draft.ts'
+import {
+  getElement,
+  getElementData,
+  getNearestFrame,
+  getTrackByElement,
+} from '@/feature/editor/util/draft.ts'
 import { AllElement, DisplayElement } from '@/lib/remotion/editor-render/schema/element.ts'
 import { RenderDraftData } from '@/lib/remotion/editor-render/schema/schema.ts'
 import { AllElementType } from '@/lib/remotion/editor-render/schema/util.ts'
@@ -51,12 +57,36 @@ export class DraftManager extends GenericManager<typeof initialState, InitOption
   }
 
   getElement<T extends AllElementType = AllElementType>(id: string, type?: T) {
-    const element = this.state.draft.timeline.elements[id]
-    if (!element) throw new ElementNotFoundError({ id, type })
+    return getElement(this.draft, id, type)
+  }
 
-    if (type && element.type !== type) throw new ElementNotFoundError({ id, type })
+  getTrackByElement(elementId: string) {
+    return getTrackByElement(this.draft, elementId)
+  }
 
-    return element
+  moveToTrack(elementId: string, trackId: string) {
+    const track = this.getTrackByElement(elementId)
+    if (!track) throw new TrackNotFoundedError({})
+    if (track.id === trackId) return
+
+    const tracks = this.draft.timeline.tracks
+    const sourceTrackIndex = tracks.findIndex(t => t.id === track.id)
+    const targetTrackIndex = tracks.findIndex(t => t.id === trackId)
+
+    if (sourceTrackIndex === -1 || targetTrackIndex === -1) {
+      return
+    }
+
+    const clip = tracks[sourceTrackIndex].clips.find(c => c.elementId === elementId)
+    if (!clip) return
+
+    this.setState(state => {
+      const sourceTrack = state.draft.timeline.tracks[sourceTrackIndex]
+      const targetTrack = state.draft.timeline.tracks[targetTrackIndex]
+
+      sourceTrack.clips = sourceTrack.clips.filter(clip => clip.elementId !== elementId)
+      targetTrack.clips.push(clip)
+    })
   }
 
   updateElement<T extends AllElement>(id: string, element: Partial<Omit<T, 'id'>>) {

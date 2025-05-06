@@ -25,10 +25,14 @@ export function FreeTrackClip(props: FreeTrackClipProps) {
     undefined
   )
 
-  const [collected, drag] = useDrag<ClipDragItem>(() => ({
-    type: EditorDragType.Clip,
-    item: { elementId: clip.elementId },
-  }))
+  const [{ isDragging }, drag] = useDrag(
+    {
+      type: EditorDragType.Clip,
+      item: { elementId: clip.elementId } as ClipDragItem,
+      collect: monitor => ({ isDragging: monitor.isDragging() }),
+    },
+    [clip]
+  )
 
   /** state unrelated, need to get state manually, todo optimize it */
   const getPixelRange = (leftOffset: number, rightOffset: number) => {
@@ -57,7 +61,11 @@ export function FreeTrackClip(props: FreeTrackClipProps) {
       ref={elem => {
         if (elem) drag(elem)
       }}
-      className={cn('absolute rounded-lg overflow-hidden', className)}
+      className={cn(
+        'absolute rounded-lg overflow-hidden',
+        isDragging ? 'invisible' : 'visible',
+        className
+      )}
       style={{
         height: 'calc(100% - 4px)',
         left: `${innerRange?.start || draftEl.start * pixelPerSecond}px`,

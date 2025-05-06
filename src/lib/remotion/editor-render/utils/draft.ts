@@ -14,16 +14,19 @@ import {
 export function shallowWalkTracksElement(
   draft: RenderDraftData,
   tracks: RenderTrack[],
-  callback: (element: AllElement, track: RenderTrack) => void
+  callback: (element: AllElement, track: RenderTrack) => boolean | void
 ) {
   const { timeline } = draft
-  for (const track of tracks) {
+  Outer: for (const track of tracks) {
     const { clips } = track
     for (const clip of clips) {
       const { elementId } = clip
       const element = timeline.elements[elementId]
       if (!element) continue
-      callback(element, track)
+      const isFinish = callback(element, track)
+      if (isFinish) {
+        break Outer
+      }
     }
   }
 }
