@@ -9,7 +9,6 @@ import { TimeRuler } from '@/feature/editor/block/timeline/track/time-ruler.tsx'
 import { TimelineTrack } from '@/feature/editor/block/timeline/track/timeline-track.tsx'
 import { useDraftManager } from '@/feature/editor/context/draft-manager.tsx'
 import { TimelineViewControllerProvider } from '@/feature/editor/context/timeline-view-controller.tsx'
-import { trackPriorityMap } from '@/lib/remotion/editor-render/constant.ts'
 
 export function TimelineContent() {
   const draftManager = useDraftManager()
@@ -23,7 +22,7 @@ export function TimelineContent() {
         <TimeRuler>
           <TimeIndicator />
           {[...tracks]
-            .sort((a, b) => trackPriorityMap[a.type] - trackPriorityMap[b.type])
+            .sort((a, b) => a.order - b.order)
             .map(track => (
               <TimelineTrack key={track.id} trackId={track.id} />
             ))}

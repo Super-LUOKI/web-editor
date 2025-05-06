@@ -177,7 +177,7 @@ export const MultipleTracksDraft: RenderDraftData = {
     },
     tracks: [
       {
-        zIndex: 10,
+        order: 20,
         id: 'test_image_track_1',
         type: 'image-video',
         clips: [
@@ -187,7 +187,7 @@ export const MultipleTracksDraft: RenderDraftData = {
         ],
       },
       {
-        zIndex: 20,
+        order: 30,
         id: 'test_track_2',
         type: 'image-video',
         clips: [
@@ -197,12 +197,13 @@ export const MultipleTracksDraft: RenderDraftData = {
         ],
       },
       {
+        order: 40,
         id: 'test_audio_track_1',
         type: 'audio',
         clips: [{ elementId: 'test_audio_1' }, { elementId: 'test_audio_2' }],
       },
       {
-        zIndex: 90,
+        order: 10,
         id: 'test_text_track_1',
         type: 'text',
         clips: [{ elementId: 'test_text_1' }, { elementId: 'test_text_2' }],
