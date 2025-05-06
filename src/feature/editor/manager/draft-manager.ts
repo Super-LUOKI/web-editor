@@ -18,6 +18,7 @@ import {
   calculateDraftDuration,
   calculateDraftDurationInFrames,
   isDisplayElement,
+  shallowWalkTracksElement,
 } from '@/lib/remotion/editor-render/utils/draft.ts'
 
 type InitOptions = {
@@ -113,6 +114,32 @@ export class DraftManager extends GenericManager<typeof initialState, InitOption
   async getDraftData(videoId: string) {
     console.log('mock draft data', videoId)
     return editorMockDraft
+  }
+
+  getIntersectingElement(
+    range: Pick<AllElement, 'start' | 'length'>,
+    trackId: string,
+    isNeeded?: (element: AllElement) => boolean
+  ) {
+    const track = this.draft.timeline.tracks.find(t => t.id === trackId)
+    if (!track) return undefined
+    const { start, length } = range
+    let ele = undefined as undefined | AllElement
+    shallowWalkTracksElement(this.draft, [track], element => {
+      const { start: elementStart, length: elementLength } = element
+      const rangeEnd = start + length
+      const elementEnd = elementStart + elementLength
+      if (
+        (start >= elementStart && start <= elementEnd) ||
+        (rangeEnd >= elementStart && rangeEnd <= elementEnd)
+      ) {
+        if (isNeeded && isNeeded(element)) {
+          ele = element
+          return true
+        }
+      }
+    })
+    return ele
   }
 
   async onInit(options: InitOptions) {

@@ -38,11 +38,34 @@ export function TimelineTrack(props: TimelineTrackProps) {
 
   const getMovingRange = (id?: string, offset?: number) => {
     if (typeof id === 'undefined' || typeof offset === 'undefined') return
+    if (!track) return
 
     const draftEl = draftManager.getElement(id)
     if (!draftEl) return
-    const start = draftManager.getNearestFrameTime(draftEl.start + offset / pixelPerSecond)
+
+    let start = draftManager.getNearestFrameTime(draftEl.start + offset / pixelPerSecond)
     const length = draftEl.length
+    const intersectingElement = draftManager.getIntersectingElement(
+      { start, length },
+      track.id,
+      ele => ele.id !== draftEl.id
+    )
+    if (intersectingElement) {
+      const { start: elementStart, length: elementLength } = intersectingElement
+      const movingEnd = start + length
+      const elementEnd = elementStart + elementLength
+      if (start >= elementStart && movingEnd <= elementEnd) {
+        return undefined
+      }
+      if (start < elementStart && movingEnd <= elementEnd) {
+        start = elementStart - length
+      }
+      if (start >= elementStart && movingEnd > elementEnd) {
+        start = elementEnd
+      }
+    }
+
+    if (start < 0) return undefined
 
     return { start, length }
   }
@@ -69,9 +92,11 @@ export function TimelineTrack(props: TimelineTrackProps) {
         if (!range) return
         setMovingRange(range)
       },
-      canDrop: item => {
+      canDrop: (item, monitor) => {
         const elementTrack = draftManager.getTrackByElement(item.elementId)
-        if (!elementTrack || !track) return false
+        const range = getMovingRange(item?.elementId, monitor.getDifferenceFromInitialOffset()?.x)
+        if (!elementTrack || !track || !range) return false
+
         return elementTrack.type === track.type
       },
       collect: monitor => ({ isOver: monitor.isOver(), canDrop: monitor.canDrop() }),
