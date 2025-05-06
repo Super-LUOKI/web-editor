@@ -126,7 +126,7 @@ export function TimelineTrack(props: TimelineTrackProps) {
         className="w-full h-full relative flex items-center"
       >
         {track.clips.map((clip, index) => (
-          <FreeTrackClip key={index} clip={clip} />
+          <FreeTrackClip key={`${clip.elementId}_${index}`} clip={clip} />
         ))}
         {isOver && canDrop && (
           <TrackClipPlaceholder allow start={movingRange.start} length={movingRange.length} />
