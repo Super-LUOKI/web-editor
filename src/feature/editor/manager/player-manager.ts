@@ -202,7 +202,12 @@ export class PlayerManager extends StateManager<typeof initialState> {
 
     const elements: AllElement[] = []
     const draft = this.draftManager.state.draft
-    shallowWalkTracksElement(draft, draft.timeline.tracks, el => {
+    const orderedTracks = [...draft.timeline.tracks].sort((a, b) => {
+      const zIndexA = a.zIndex || 1
+      const zIndexB = b.zIndex || 1
+      return zIndexB - zIndexA
+    })
+    shallowWalkTracksElement(draft, orderedTracks, el => {
       if (!isDisplayElement(el)) return
       if (this.isShowInCurrentTime(el) && this.isHit(point, el)) {
         elements.push(el)

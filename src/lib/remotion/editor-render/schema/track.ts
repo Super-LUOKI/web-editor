@@ -12,6 +12,7 @@ export const TrackSchema = z.object({
    */
   clips: z.array(TrackClip),
   hidden: z.boolean().optional(),
+  zIndex: z.number().optional(),
 })
 
 export type RenderTrackClip = z.infer<typeof TrackClip>
