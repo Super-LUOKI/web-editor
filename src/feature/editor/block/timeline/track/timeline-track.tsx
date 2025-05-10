@@ -43,31 +43,15 @@ export function TimelineTrack(props: TimelineTrackProps) {
     const draftEl = draftManager.getElement(id)
     if (!draftEl) return
 
-    let start = draftManager.getNearestFrameTime(draftEl.start + offset / pixelPerSecond)
-    const length = draftEl.length
-    const intersectingElement = draftManager.getIntersectingElement(
-      { start, length },
-      track.id,
-      ele => ele.id !== draftEl.id
+    const alignStart = draftManager.getNearestFrameTime(draftEl.start + offset / pixelPerSecond)
+    const adjustRange = vc.getDropRange(
+      { start: alignStart, end: alignStart + draftEl.length },
+      trackId,
+      draftEl.id
     )
-    if (intersectingElement) {
-      const { start: elementStart, length: elementLength } = intersectingElement
-      const movingEnd = start + length
-      const elementEnd = elementStart + elementLength
-      if (start >= elementStart && movingEnd <= elementEnd) {
-        return undefined
-      }
-      if (start < elementStart && movingEnd <= elementEnd) {
-        start = elementStart - length
-      }
-      if (start >= elementStart && movingEnd > elementEnd) {
-        start = elementEnd
-      }
-    }
+    if (!adjustRange) return
 
-    if (start < 0) return undefined
-
-    return { start, length }
+    return { start: adjustRange.start, length: adjustRange.end - adjustRange.start }
   }
 
   const [{ isOver, canDrop }, drop] = useDrop(

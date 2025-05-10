@@ -33,7 +33,8 @@ export function TimelineContent() {
 }
 
 export function Timeline() {
-  const [vc] = useState(new TimelineViewController())
+  const draftManager = useDraftManager()
+  const [vc] = useState(new TimelineViewController(draftManager))
   return (
     <TimelineViewControllerProvider value={vc}>
       <TimelineContent />

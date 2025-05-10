@@ -116,30 +116,32 @@ export class DraftManager extends GenericManager<typeof initialState, InitOption
     return editorMockDraft
   }
 
-  getIntersectingElement(
-    range: Pick<AllElement, 'start' | 'length'>,
+  getIntersectingElements(
+    range: { start: number; length: number },
     trackId: string,
     isNeeded?: (element: AllElement) => boolean
   ) {
+    const elems = [] as AllElement[]
     const track = this.draft.timeline.tracks.find(t => t.id === trackId)
-    if (!track) return undefined
+    if (!track) return elems
     const { start, length } = range
-    let ele = undefined as undefined | AllElement
+
     shallowWalkTracksElement(this.draft, [track], element => {
       const { start: elementStart, length: elementLength } = element
       const rangeEnd = start + length
       const elementEnd = elementStart + elementLength
       if (
         (start >= elementStart && start <= elementEnd) ||
-        (rangeEnd >= elementStart && rangeEnd <= elementEnd)
+        (rangeEnd >= elementStart && rangeEnd <= elementEnd) ||
+        (elementStart >= start && elementStart <= rangeEnd) ||
+        (elementEnd >= start && elementEnd <= rangeEnd)
       ) {
         if (isNeeded && isNeeded(element)) {
-          ele = element
-          return true
+          elems.push(element)
         }
       }
     })
-    return ele
+    return elems
   }
 
   async onInit(options: InitOptions) {

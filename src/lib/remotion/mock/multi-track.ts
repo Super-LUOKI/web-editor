@@ -7,9 +7,9 @@ export const MultipleTracksDraft: RenderDraftData = {
       test_image: {
         id: 'test_image',
         type: 'image',
-        src: 'https://haowallpaper.com/link/common/file/previewFileImg/15618353851830592',
-        width: 1100,
-        height: 703,
+        src: 'http://img.netbian.com/file/2025/0430/11103026Jkl.jpg',
+        width: 1920,
+        height: 1080,
       },
       test_audio_1: {
         id: 'test_audio_1',

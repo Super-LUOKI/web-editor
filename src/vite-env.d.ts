@@ -1,6 +1,7 @@
 /// <reference types="vite/client" />
 
 import type * as React from 'react'
+import '@total-typescript/ts-reset/filter-boolean'
 
 declare global {
   namespace JSX {
