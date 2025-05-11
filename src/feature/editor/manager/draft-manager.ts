@@ -116,6 +116,12 @@ export class DraftManager extends GenericManager<typeof initialState, InitOption
     return editorMockDraft
   }
 
+  getTrackByElementId(elementId: string) {
+    return this.draft.timeline.tracks.find(track => {
+      return track.clips.findIndex(clip => clip.elementId === elementId) !== -1
+    })
+  }
+
   getIntersectingElements(
     range: { start: number; length: number },
     trackId: string,

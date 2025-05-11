@@ -12,7 +12,7 @@ import { cn } from '@/lib/shadcn/util.ts'
 
 type FreeTrackClipProps = Omit<ComponentPropsWithoutRef<typeof TimelineTrackClip>, 'style'>
 
-const RESIZE_HANDLER_WIDTH = 4
+const RESIZE_HANDLER_WIDTH = 2
 
 export function FreeTrackClip(props: FreeTrackClipProps) {
   const { className, clip, ...rest } = props
@@ -42,30 +42,46 @@ export function FreeTrackClip(props: FreeTrackClipProps) {
     const pixelPerFrame = newPixelPerSecond / draftManager.fps
     const newLeftOffset = Math.round(leftOffset / pixelPerFrame) * pixelPerFrame
     const start = newestDraftEl.start * newPixelPerSecond + newLeftOffset
-    const width =
+    let width =
       Math.round(
         (newestDraftEl.length * newPixelPerSecond - newLeftOffset + rightOffset) / pixelPerFrame
       ) * pixelPerFrame
 
-    if (start < 0 || width <= RESIZE_HANDLER_WIDTH) return
+    width = Math.max(RESIZE_HANDLER_WIDTH, width)
+
+    if (start < 0) return
+
+    const timeRange = {
+      start: start / newPixelPerSecond,
+      end: (start + width) / newPixelPerSecond,
+    }
+    const newTimeRange = vc.getResizeRange(
+      timeRange,
+      clip.elementId,
+      leftOffset === 0 ? 'right' : 'left'
+    )
+    if (!newTimeRange) return
+    const { start: newTimeStart, end: newTimeEnd } = newTimeRange
+
+    console.log(newTimeRange)
     return {
-      start,
-      width,
+      start: newTimeStart * newPixelPerSecond,
+      width: (newTimeEnd - newTimeStart) * newPixelPerSecond,
     }
   }
 
   if (!draftEl) return null
+
+  const clipWidth = innerRange?.width || draftEl.length * pixelPerSecond
+
+  const isNarrowClip = clipWidth <= 5 * RESIZE_HANDLER_WIDTH
 
   return (
     <ResizeWrapper
       ref={elem => {
         if (elem) drag(elem)
       }}
-      className={cn(
-        'absolute rounded-lg overflow-hidden',
-        isDragging ? 'invisible' : 'visible',
-        className
-      )}
+      className={cn('absolute overflow-hidden', isDragging ? 'invisible' : 'visible', className)}
       style={{
         height: 'calc(100% - 4px)',
         left: `${innerRange?.start || draftEl.start * pixelPerSecond}px`,
@@ -94,11 +110,16 @@ export function FreeTrackClip(props: FreeTrackClipProps) {
         style={{
           overflow: 'hidden',
           boxSizing: 'border-box',
-          width: `${innerRange?.width || draftEl.length * pixelPerSecond}px`,
+          width: `${clipWidth}px`,
           height: '100%',
         }}
       >
-        <TimelineTrackClip className="size-full" clip={clip} {...rest} />
+        <TimelineTrackClip
+          className="size-full"
+          style={{ borderRadius: isNarrowClip ? 0 : undefined }}
+          clip={clip}
+          {...rest}
+        />
       </div>
     </ResizeWrapper>
   )

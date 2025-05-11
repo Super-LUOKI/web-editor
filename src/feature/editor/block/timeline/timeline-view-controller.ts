@@ -82,24 +82,77 @@ export class TimelineViewController extends GenericManager<typeof initialState, 
     return availableRanges
   }
 
-  getDropRange(range: Range, trackId: string, targetElementId: string) {
-    let dropRange: Range | undefined = undefined
-
-    const rangeLength = range.end - range.start
-    if (!range || range.start >= range.end) return undefined
+  private getTrackUsedRanges(trackId: string, ignoreElementId?: string) {
     const track = this.draftManager.draft.timeline.tracks.find(t => t.id === trackId)
     if (!track) return undefined
-
     const trackUsedRanges: Range[] = track.clips
       .map(clip => {
         const elem = this.draftManager.getElement(clip.elementId)
-        if (!elem || elem.id === targetElementId) {
+        if (!elem || elem.id === ignoreElementId) {
           return undefined
         }
         return { start: elem.start, end: elem.start + elem.length }
       })
       .filter(Boolean)
       .sort((a, b) => a.start - b.start)
+
+    return trackUsedRanges
+  }
+
+  getResizeRange(range: Range, targetElementId: string, direction: 'left' | 'right') {
+    if (!range || range.start > range.end) return undefined
+
+    let resizeRange: Range | undefined = undefined
+    const trackId = this.draftManager.getTrackByElement(targetElementId)?.id
+    if (!trackId) return undefined
+    const trackUsedRanges = this.getTrackUsedRanges(trackId, targetElementId)
+    if (!trackUsedRanges) return undefined
+
+    let leftUsedRange = lodash.findLast(trackUsedRanges, r => r.start < range.start)
+    let rightUsedRange = trackUsedRanges.find(r => r.end > range.end)
+
+    const inTargetRangeRanges = trackUsedRanges.filter(
+      usedRange => usedRange.start >= range.start && usedRange.end <= range.end
+    )
+    if (inTargetRangeRanges.length > 0) {
+      if (direction === 'left') {
+        leftUsedRange = inTargetRangeRanges.at(-1)
+      } else {
+        rightUsedRange = inTargetRangeRanges[0]
+      }
+    }
+
+    if (!leftUsedRange && rightUsedRange) {
+      resizeRange = {
+        start: Math.max(0, range.start),
+        end: Math.min(rightUsedRange.start, range.end),
+      }
+    } else if (leftUsedRange && !rightUsedRange) {
+      resizeRange = {
+        start: Math.max(leftUsedRange.end, range.start),
+        end: range.end,
+      }
+    } else if (leftUsedRange && rightUsedRange) {
+      console.log({
+        rightRangeStart: rightUsedRange.start,
+        leftRangeEnd: leftUsedRange.end,
+      })
+      resizeRange = {
+        start: Math.max(leftUsedRange.end, range.start),
+        end: Math.min(rightUsedRange.start, range.end),
+      }
+    }
+
+    return resizeRange
+  }
+
+  getDropRange(range: Range, trackId: string, targetElementId: string) {
+    let dropRange: Range | undefined = undefined
+
+    const rangeLength = range.end - range.start
+    if (!range || range.start >= range.end) return undefined
+    const trackUsedRanges = this.getTrackUsedRanges(trackId, targetElementId)
+    if (!trackUsedRanges) return undefined
 
     const leftUsedRangeIndex = lodash.findLastIndex(trackUsedRanges, r => r.start <= range.start)
     const rightUsedRangeIndex = lodash.findIndex(trackUsedRanges, r => r.end >= range.end)
@@ -117,8 +170,9 @@ export class TimelineViewController extends GenericManager<typeof initialState, 
 
     if (!leftUsedRange && rightUsedRange) {
       if (rightUsedRange.start < rangeLength) return undefined
-      const end = Math.min(rightUsedRange.start - rangeLength, range.end)
-      dropRange = { start: end - range.start, end }
+      const end = Math.min(rightUsedRange.start, range.end)
+      dropRange = { start: end - rangeLength, end }
+      console.log('dropRange', dropRange)
     }
     if (leftUsedRange && !rightUsedRange) {
       const start = Math.max(leftUsedRange.end, range.start)
