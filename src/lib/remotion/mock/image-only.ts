@@ -68,6 +68,7 @@ export const ImageOnlyDraft1: RenderDraftData = {
     },
     tracks: [
       {
+        order: 0,
         id: 'test_track_1',
         type: 'image-video',
         clips: [

@@ -8,7 +8,8 @@ export function useElements(draft: RenderDraftData) {
   return useMemo(() => {
     const displayElements: AllElement[] = []
     const audioElements: AudioElement[] = []
-    shallowWalkTracksElement(draft, draft.timeline.tracks, element => {
+    const orderedTracks = [...draft.timeline.tracks].sort((a, b) => -(a.order - b.order))
+    shallowWalkTracksElement(draft, orderedTracks, element => {
       if (isTargetElement(element, 'audio')) {
         audioElements.push(element)
       } else {

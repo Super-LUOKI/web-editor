@@ -4,7 +4,6 @@ import { GenericManager } from '@/common/object/generic-manager.ts'
 import { ElementNotFoundError } from '@/feature/editor/manager/error/element-not-found-error.ts'
 import { ElementTypeError } from '@/feature/editor/manager/error/element-type-error.ts'
 import { TrackNotFoundedError } from '@/feature/editor/manager/error/track-not-founded-error.ts'
-import { editorMockDraft } from '@/feature/editor/util'
 import {
   getElement,
   getElementData,
@@ -20,6 +19,7 @@ import {
   isDisplayElement,
   shallowWalkTracksElement,
 } from '@/lib/remotion/editor-render/utils/draft.ts'
+import { TrialDraft } from '@/lib/remotion/mock/trial.ts'
 
 type InitOptions = {
   videoId: string
@@ -113,7 +113,7 @@ export class DraftManager extends GenericManager<typeof initialState, InitOption
 
   async getDraftData(videoId: string) {
     console.log('mock draft data', videoId)
-    return editorMockDraft
+    return TrialDraft
   }
 
   getTrackByElementId(elementId: string) {
