@@ -197,7 +197,7 @@ export class TimelineViewController extends GenericManager<typeof initialState, 
     return dropRange
   }
 
-  updatePixelPerSecond(pixel: number) {
+  updatePixelPerSecond(pixel: number, followTimeIndicator: boolean = false) {
     this.setState(state => {
       state.pixelPerSecond = pixel
     })

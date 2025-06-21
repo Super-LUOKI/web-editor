@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useDrop } from 'react-dnd'
 import { useZustand } from 'use-zustand'
 
+import { PortalSource } from '@/component/portal/portal-source'
 import { HEADER_WIDTH } from '@/feature/editor/block/timeline/constant.ts'
 import { FreeTrackClip } from '@/feature/editor/block/timeline/track/free-track-clip.tsx'
 import { TrackClipPlaceholder } from '@/feature/editor/block/timeline/track/track-clip-placeholder.tsx'
@@ -94,15 +95,19 @@ export function TimelineTrack(props: TimelineTrackProps) {
   }
   return (
     <div className={cn('w-full h-[38px] border-b-[1px] border-dashed border-gray-200 relative')}>
-      <div
-        className={cn(
-          'absolute left-0 top-0 -translate-x-full bg-gray-200 h-full rounded-md flex justify-center items-center',
-          'text-sm text-gray-800'
-        )}
-        style={{ width: HEADER_WIDTH - 8, marginLeft: -8 }}
-      >
-        {trackTitleMap[track.type]}
-      </div>
+      <PortalSource targetId={trackId}>
+        <div className="h-[38px] flex flex-col justify-center px-1">
+          <div
+            className={cn(
+              'h-[36px] bg-gray-200 rounded-md flex justify-center items-center',
+              'text-sm text-gray-800'
+            )}
+            style={{ width: HEADER_WIDTH - 8 }}
+          >
+            {trackTitleMap[track.type]}
+          </div>
+        </div>
+      </PortalSource>
       <div
         ref={elem => {
           if (elem) drop(elem)

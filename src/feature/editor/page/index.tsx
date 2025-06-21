@@ -36,16 +36,16 @@ function Editor() {
 
 export function EditorPage(props: EditorPageProps) {
   const { videoId } = props
-  const [draftManager] = useState(new DraftManager())
-  const [editorManager] = useState(new EditorManager())
-  const [playerManager] = useState(new PlayerManager(draftManager))
+  const [draftManager] = useState(() => new DraftManager())
+  const [editorManager] = useState(() => new EditorManager())
+  const [playerManager] = useState(() => new PlayerManager(draftManager))
 
   useEffect(() => {
-    draftManager.init({ videoId: videoId || '' })
+    draftManager.bootstrap({ videoId: videoId || '' })
     return () => {
       draftManager.destroy()
     }
-  }, [])
+  }, [videoId])
 
   return (
     <DraftManagerProvider value={draftManager}>

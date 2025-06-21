@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useZustand } from 'use-zustand'
 
+import { PortalTarget } from '@/component/portal/portal-target'
 import { HEADER_WIDTH } from '@/feature/editor/block/timeline/constant.ts'
 import { TimelineAction } from '@/feature/editor/block/timeline/timeline-action.tsx'
 import { TimelineViewController } from '@/feature/editor/block/timeline/timeline-view-controller.ts'
@@ -16,17 +17,25 @@ export function TimelineContent() {
   const tracks = useZustand(draftManager.store, s => s.draft.timeline.tracks)
 
   return (
-    <div className="w-full border-t-[1px] border-t-gray-100 ">
+    <div className="w-full border-t-[1px] border-t-gray-100 flex-col">
       <TimelineAction />
-      <div className="w-full overflow-x-scroll bg-gray-50" style={{ paddingLeft: HEADER_WIDTH }}>
-        <TimeRuler>
-          <TimeIndicator />
-          {[...tracks]
-            .sort((a, b) => a.order - b.order)
-            .map(track => (
-              <TimelineTrack key={track.id} trackId={track.id} />
-            ))}
-        </TimeRuler>
+      <div className="w-full flex bg-gray-50">
+        <div></div>
+        <div className="pt-[15px] flex flex-col">
+          {tracks.map(track => (
+            <PortalTarget key={track.id} targetId={track.id} />
+          ))}
+        </div>
+        <div className="w-0 flex-1 overflow-x-scroll ">
+          <TimeRuler>
+            <TimeIndicator />
+            {[...tracks]
+              .sort((a, b) => a.order - b.order)
+              .map(track => (
+                <TimelineTrack key={track.id} trackId={track.id} />
+              ))}
+          </TimeRuler>
+        </div>
       </div>
     </div>
   )

@@ -1,6 +1,8 @@
 import lodash from 'lodash'
 
-import { GenericManager } from '@/common/object/generic-manager.ts'
+import { ApiRequestService } from '@/api'
+import { cancelable } from '@/common/object/cancelable-enhance.ts'
+import { StateManager } from '@/common/object/state-manager.ts'
 import { ElementNotFoundError } from '@/feature/editor/manager/error/element-not-found-error.ts'
 import { ElementTypeError } from '@/feature/editor/manager/error/element-type-error.ts'
 import { TrackNotFoundedError } from '@/feature/editor/manager/error/track-not-founded-error.ts'
@@ -21,7 +23,7 @@ import {
 } from '@/lib/remotion/editor-render/utils/draft.ts'
 import { TrialDraft } from '@/lib/remotion/mock/trial.ts'
 
-type InitOptions = {
+type bootstrapOptions = {
   videoId: string
 }
 
@@ -32,7 +34,9 @@ const emptyDraft: RenderDraftData = {
 
 const initialState = { draft: emptyDraft, duration: 0, frameDuration: 0 }
 
-export class DraftManager extends GenericManager<typeof initialState, InitOptions> {
+export class DraftManager extends StateManager<typeof initialState> {
+  private disposers: (() => void)[] = []
+
   constructor() {
     super(initialState)
   }
@@ -112,7 +116,14 @@ export class DraftManager extends GenericManager<typeof initialState, InitOption
   }
 
   async getDraftData(videoId: string) {
-    console.log('mock draft data', videoId)
+    const isMock = true
+    if (!isMock) {
+      return await ApiRequestService.get<RenderDraftData>(
+        '/demo/story',
+        {},
+        { timeout: 20 * 60 * 1000 }
+      )
+    }
     return TrialDraft
   }
 
@@ -150,9 +161,9 @@ export class DraftManager extends GenericManager<typeof initialState, InitOption
     return elems
   }
 
-  async onInit(options: InitOptions) {
+  async _bootstrap(options: bootstrapOptions) {
     const { videoId } = options
-    this.addDisposers(
+    this.disposers.push(
       this.store.subscribe(
         lodash.debounce((state: typeof initialState) => {
           this.setState(storeState => {
@@ -161,13 +172,25 @@ export class DraftManager extends GenericManager<typeof initialState, InitOption
         }, 200)
       )
     )
+    const draftDataPromise = cancelable(this.getDraftData(videoId))
+    this.disposers.push(draftDataPromise.cancel.bind(draftDataPromise))
 
-    const draftData = await this.getDraftData(videoId)
+    const draftData = await draftDataPromise
     this.setDraft(draftData)
   }
 
-  onDestroy(): void | Promise<void> {
-    return super.onDestroy()
+  private _bootstrapTimer: ReturnType<typeof setTimeout> | undefined = undefined
+  /** todo: test */
+  async bootstrap(options: bootstrapOptions) {
+    if (this._bootstrapTimer) {
+      clearTimeout(this._bootstrapTimer)
+    }
+    this._bootstrapTimer = setTimeout(() => this._bootstrap(options), 500)
+  }
+
+  destroy(): void | Promise<void> {
+    this.disposers.forEach(disposer => disposer())
+    this.disposers = []
   }
 
   setDraft(draft: RenderDraftData) {
