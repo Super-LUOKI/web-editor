@@ -1,7 +1,13 @@
+import { AssetNotFoundError } from '../manager/error/asset-not-found-error'
 import { ElementNotFoundError } from '@/feature/editor/manager/error/element-not-found-error.ts'
 import { RenderDraftData } from '@/lib/remotion/editor-render/schema/schema.ts'
 import { RenderTrack } from '@/lib/remotion/editor-render/schema/track.ts'
-import { AllElementType, ElementOfType } from '@/lib/remotion/editor-render/schema/util.ts'
+import {
+  AllAssetType,
+  AllElementType,
+  AssetOfType,
+  ElementOfType,
+} from '@/lib/remotion/editor-render/schema/util.ts'
 import { shallowWalkTracksElement } from '@/lib/remotion/editor-render/utils/draft.ts'
 
 export function getElementData<T extends AllElementType>(
@@ -36,7 +42,20 @@ export function getElement<T extends AllElementType = AllElementType>(
 
   if (type && element.type !== type) throw new ElementNotFoundError({ id, type })
 
-  return element
+  return element as ElementOfType<T>
+}
+
+export function getAsset<T extends AllAssetType = AllAssetType>(
+  draft: RenderDraftData,
+  id: string,
+  type?: T
+) {
+  const asset = draft.timeline.assets[id]
+  if (!asset) throw new AssetNotFoundError({ id, type })
+
+  if (type && asset.type !== type) throw new AssetNotFoundError({ id, type })
+
+  return asset as AssetOfType<T>
 }
 
 export function getTrackByElement(draft: RenderDraftData, elementId: string) {

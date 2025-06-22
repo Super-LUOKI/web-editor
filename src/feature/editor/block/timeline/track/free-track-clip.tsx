@@ -63,7 +63,6 @@ export function FreeTrackClip(props: FreeTrackClipProps) {
     if (!newTimeRange) return
     const { start: newTimeStart, end: newTimeEnd } = newTimeRange
 
-    console.log(newTimeRange)
     return {
       start: newTimeStart * newPixelPerSecond,
       width: (newTimeEnd - newTimeStart) * newPixelPerSecond,

@@ -7,6 +7,7 @@ import { ElementNotFoundError } from '@/feature/editor/manager/error/element-not
 import { ElementTypeError } from '@/feature/editor/manager/error/element-type-error.ts'
 import { TrackNotFoundedError } from '@/feature/editor/manager/error/track-not-founded-error.ts'
 import {
+  getAsset,
   getElement,
   getElementData,
   getNearestFrame,
@@ -14,7 +15,7 @@ import {
 } from '@/feature/editor/util/draft.ts'
 import { AllElement, DisplayElement } from '@/lib/remotion/editor-render/schema/element.ts'
 import { RenderDraftData } from '@/lib/remotion/editor-render/schema/schema.ts'
-import { AllElementType } from '@/lib/remotion/editor-render/schema/util.ts'
+import { AllAssetType, AllElementType } from '@/lib/remotion/editor-render/schema/util.ts'
 import {
   calculateDraftDuration,
   calculateDraftDurationInFrames,
@@ -63,6 +64,10 @@ export class DraftManager extends StateManager<typeof initialState> {
 
   getElement<T extends AllElementType = AllElementType>(id: string, type?: T) {
     return getElement(this.draft, id, type)
+  }
+
+  getAsset<T extends AllAssetType = AllAssetType>(id: string, type?: T) {
+    return getAsset(this.draft, id, type)
   }
 
   getTrackByElement(elementId: string) {
