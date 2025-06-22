@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useDrop } from 'react-dnd'
 import { useZustand } from 'use-zustand'
 
-import { PortalSource } from '@/component/portal/portal-source'
+import { PortalSource } from '@/component/portal'
 import { HEADER_WIDTH } from '@/feature/editor/block/timeline/constant.ts'
 import { FreeTrackClip } from '@/feature/editor/block/timeline/track/free-track-clip.tsx'
 import { TrackClipPlaceholder } from '@/feature/editor/block/timeline/track/track-clip-placeholder.tsx'

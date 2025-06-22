@@ -1,14 +1,31 @@
-import { HTMLAttributes } from 'react'
+import { useRef, useEffect } from 'react'
+
+import { usePortalContext } from './portal-context'
+import { PortalTargetProps } from './type'
 
 export function getPortalTargetElemId(targetId: string) {
   return `portal_target_${targetId}`
 }
 
-type PortalTargetProps = HTMLAttributes<HTMLDivElement> & {
-  targetId: string
-}
-
 export function PortalTarget(props: PortalTargetProps) {
-  const { targetId, ...rest } = props
-  return <div id={getPortalTargetElemId(targetId)} {...rest} />
+  const { targetId, children, ...rest } = props
+  const { registerTarget, unregisterTarget } = usePortalContext()
+  const elementRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const element = elementRef.current
+    if (!element) return
+
+    registerTarget(targetId, element)
+
+    return () => {
+      unregisterTarget(targetId)
+    }
+  }, [targetId, registerTarget, unregisterTarget])
+
+  return (
+    <div ref={elementRef} id={getPortalTargetElemId(targetId)} {...rest}>
+      {children}
+    </div>
+  )
 }

@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { useZustand } from 'use-zustand'
 
-import { PortalTarget } from '@/component/portal/portal-target'
-import { HEADER_WIDTH } from '@/feature/editor/block/timeline/constant.ts'
+import { PortalTarget, PortalProvider } from '@/component/portal'
 import { TimelineAction } from '@/feature/editor/block/timeline/timeline-action.tsx'
 import { TimelineViewController } from '@/feature/editor/block/timeline/timeline-view-controller.ts'
 import { TimeIndicator } from '@/feature/editor/block/timeline/track/time-indicator.tsx'
